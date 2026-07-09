@@ -1,0 +1,15 @@
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:4123
+- Network:       http://192.168.31.43:4123
+- Environments: .env
+✓ Ready in 1048ms
+
+ GET / 200 in 2.3s (next.js: 328ms, application-code: 2.0s)
+ GET / 200 in 342ms (next.js: 25ms, application-code: 317ms)
+ GET /collection 200 in 1025ms (next.js: 51ms, application-code: 974ms)
+ GET /about 200 in 637ms (next.js: 141ms, application-code: 496ms)
+ GET /sustainability 200 in 565ms (next.js: 77ms, application-code: 488ms)
+ GET /customers 200 in 397ms (next.js: 95ms, application-code: 301ms)
+ GET /contact 200 in 470ms (next.js: 55ms, application-code: 414ms)
+ GET / 200 in 452ms (next.js: 13ms, application-code: 439ms)
+[browser] Image with src "/manufacturing-studio.png" has "fill" and parent element with invalid "position". Provided "static" should be one of absolute,fixed,relative. (file://C:/Users/USER/Desktop/Credence Sachin/credence-asia/.next/dev/static/chunks/node_modules_next_dist_1ybzpk2._.js:2477:13)
