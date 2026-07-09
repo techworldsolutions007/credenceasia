@@ -28,25 +28,25 @@ const WM: Pick<Partner, 'shape' | 'intrinsic'> = {
 // ─── 15 approved logos (all 1000 × 250 wordmarks) ────────────────────────────
 // Files 15.png · 17.png · 18.png not yet in /public — add entries when ready.
 export const PARTNERS: Partner[] = [
-  {name: 'Liberte Essentiel', src: '/assets/logos/1.png',  ...WM},
-  {name: "co'couture",        src: '/assets/logos/2.png',  ...WM},
-  {name: 'rosemunde',         src: '/assets/logos/3.png',  ...WM},
-  {name: 'FREE/QUENT',        src: '/assets/logos/4.png',  ...WM},
-  {name: 'Herff Jones',       src: '/assets/logos/5.png',  ...WM},
-  {name: 'Walmart',           src: '/assets/logos/6.png',  ...WM},
-  {name: 'BMW',               src: '/assets/logos/7.png',  ...WM},
-  {name: 'COVERSTORY',        src: '/assets/logos/8.png',  ...WM},
-  {name: 'NEO NOIR',          src: '/assets/logos/9.png',  ...WM},
-  {name: 'U.S. Polo Assn.',   src: '/assets/logos/10.png', ...WM},
-  {name: 'CLAAS',             src: '/assets/logos/11.png', ...WM},
-  {name: 'STIHL',             src: '/assets/logos/12.png', ...WM},
-  {name: 'MUFTI',             src: '/assets/logos/13.png', ...WM},
-  {name: 'Volkswagen',        src: '/assets/logos/14.png', ...WM},
-  {name: 'BALILAB',           src: '/assets/logos/16.png', ...WM},
+  {name: 'Liberte Essentiel', src: '/assets/logos/customers/1.png',  ...WM},
+  {name: "co'couture",        src: '/assets/logos/customers/2.png',  ...WM},
+  {name: 'rosemunde',         src: '/assets/logos/customers/3.png',  ...WM},
+  {name: 'FREE/QUENT',        src: '/assets/logos/customers/4.png',  ...WM},
+  {name: 'Herff Jones',       src: '/assets/logos/customers/5.png',  ...WM},
+  {name: 'Walmart',           src: '/assets/logos/customers/6.png',  ...WM},
+  {name: 'BMW',               src: '/assets/logos/customers/7.png',  ...WM},
+  {name: 'COVERSTORY',        src: '/assets/logos/customers/8.png',  ...WM},
+  {name: 'NEO NOIR',          src: '/assets/logos/customers/9.png',  ...WM},
+  {name: 'U.S. Polo Assn.',   src: '/assets/logos/customers/10.png', ...WM},
+  {name: 'CLAAS',             src: '/assets/logos/customers/11.png', ...WM},
+  {name: 'STIHL',             src: '/assets/logos/customers/12.png', ...WM},
+  {name: 'MUFTI',             src: '/assets/logos/customers/13.png', ...WM},
+  {name: 'Volkswagen',        src: '/assets/logos/customers/14.png', ...WM},
+  {name: 'BALILAB',           src: '/assets/logos/customers/16.png', ...WM},
   // Add when files are ready:
-  // {name: 'TJX',    src: '/assets/logos/15.png', ...WM},
-  // {name: '???',    src: '/assets/logos/17.png', ...WM},
-  // {name: '???',    src: '/assets/logos/18.png', ...WM},
+  // {name: 'TJX',    src: '/assets/logos/customers/15.jpeg', ...WM},
+  // {name: '???',    src: '/assets/logos/customers/17.jpeg', ...WM},
+  // {name: '???',    src: '/assets/logos/customers/18.jpeg', ...WM},
 ]
 
 /** Grid shows fallback text instead of an empty/sparse grid below this count */
