@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import {Outfit, Work_Sans} from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
 import PageLoader from '@/components/PageLoader'
@@ -37,7 +36,6 @@ export default async function RootLayout({children}: {children: React.ReactNode}
       <body className="min-h-full bg-ivory text-charcoal">
         <PageLoader />
         <SmoothScroll>
-          <Navbar />
           {children}
           <Footer settings={settings} />
         </SmoothScroll>

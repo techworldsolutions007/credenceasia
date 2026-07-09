@@ -35,9 +35,6 @@ export default function Navbar() {
     return () => {document.body.style.overflow = ''}
   }, [open])
 
-  // Home page uses its own embedded nav inside the full-bleed hero
-  if (pathname === '/') return null
-
   return (
     <>
       <header
