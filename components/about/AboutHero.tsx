@@ -1,202 +1,181 @@
-'use client';
+'use client'
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react'
+import Image from 'next/image'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface AboutHeroProps {
-  title?: string;
-  introText?: string;
+  title?: string
+  introText?: string
 }
 
+const PROOF = [
+  { value: '2016',        label: 'Founded' },
+  { value: 'Hong Kong',   label: 'Headquarters' },
+  { value: 'Copenhagen',  label: 'Design hub' },
+  { value: '6+',          label: 'Manufacturing countries' },
+]
+
 export default function AboutHero({ title, introText }: AboutHeroProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number | undefined>(undefined);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const sectionRef  = useRef<HTMLElement>(null)
+  const imgWrapRef  = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const ctx = gsap.context(() => {
+      // Initial hidden states — set synchronously before first paint
+      gsap.set('.ah-eyebrow', { opacity: 0, y: 10 })
+      gsap.set('.ah-word',    { yPercent: 110 })
+      gsap.set('.ah-body',    { opacity: 0, y: 18 })
+      gsap.set('.ah-proof > *', { opacity: 0, y: 10 })
+      gsap.set('.ah-scroll',  { opacity: 0 })
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let time = 0;
-    const speed = 0.02;
-    const scale = 2;
-    const noiseIntensity = 0.8;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const noise = (x: number, y: number) => {
-      const G = 2.71828;
-      const rx = G * Math.sin(G * x);
-      const ry = G * Math.sin(G * y);
-      return (rx * ry * (1 + x)) % 1;
-    };
-
-    const animate = () => {
-      const { width, height } = canvas;
-
-      const gradient = ctx.createLinearGradient(0, 0, width, height);
-      gradient.addColorStop(0, '#1a1a1a');
-      gradient.addColorStop(0.5, '#2a2a2a');
-      gradient.addColorStop(1, '#1a1a1a');
-
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
-
-      const imageData = ctx.createImageData(width, height);
-      const data = imageData.data;
-
-      for (let x = 0; x < width; x += 2) {
-        for (let y = 0; y < height; y += 2) {
-          const u = (x / width) * scale;
-          const v = (y / height) * scale;
-
-          const tOffset = speed * time;
-          const tex_x = u;
-          const tex_y = v + 0.03 * Math.sin(8.0 * tex_x - tOffset);
-
-          const pattern = 0.6 + 0.4 * Math.sin(
-            5.0 * (tex_x + tex_y +
-              Math.cos(3.0 * tex_x + 5.0 * tex_y) +
-              0.02 * tOffset) +
-            Math.sin(20.0 * (tex_x + tex_y - 0.1 * tOffset))
-          );
-
-          const rnd = noise(x, y);
-          const intensity = Math.max(0, pattern - rnd / 15.0 * noiseIntensity);
-
-          const r = Math.floor(123 * intensity);
-          const g = Math.floor(116 * intensity);
-          const b = Math.floor(129 * intensity);
-
-          const index = (y * width + x) * 4;
-          if (index < data.length) {
-            data[index] = r;
-            data[index + 1] = g;
-            data[index + 2] = b;
-            data[index + 3] = 255;
-          }
-        }
+      if (reduced) {
+        gsap.set(['.ah-eyebrow', '.ah-body', '.ah-proof > *', '.ah-scroll'], { opacity: 1, y: 0 })
+        gsap.set('.ah-word', { yPercent: 0 })
+        return
       }
 
-      ctx.putImageData(imageData, 0, 0);
+      // Parallax on image container
+      if (imgWrapRef.current) {
+        gsap.to(imgWrapRef.current, {
+          yPercent: 14,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.6,
+          },
+        })
+      }
 
-      const overlayGradient = ctx.createRadialGradient(
-        width / 2, height / 2, 0,
-        width / 2, height / 2, Math.max(width, height) / 2
-      );
-      overlayGradient.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
-      overlayGradient.addColorStop(1, 'rgba(0, 0, 0, 0.45)');
+      // Staggered entrance timeline
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+      tl.to('.ah-eyebrow', { opacity: 1, y: 0, duration: 0.65 }, 0.2)
+      tl.to('.ah-word',    { yPercent: 0, duration: 1, ease: 'power4.out', stagger: 0.1 }, 0.38)
+      tl.to('.ah-body',    { opacity: 1, y: 0, duration: 0.75 }, 0.9)
+      tl.to('.ah-proof > *', { opacity: 1, y: 0, duration: 0.5, stagger: 0.06 }, 1.1)
+      tl.to('.ah-scroll',  { opacity: 1, duration: 0.5 }, 1.3)
+    }, sectionRef)
 
-      ctx.fillStyle = overlayGradient;
-      ctx.fillRect(0, 0, width, height);
+    return () => ctx.revert()
+  }, [])
 
-      time += 1;
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, []);
+  // Always use the designed editorial heading — the Sanity `title` field is a
+  // document label, not a hero headline. Override via introText for copy changes.
+  const headingLines = ['Built across Asia.', 'Designed around your business.']
+  void title // reserved for future CMS hero-title field
 
   return (
-    <>
-      <style>{`
-        @keyframes aboutFadeUp {
-          from { opacity: 0; transform: translateY(1.5rem); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .about-hero-fade-1 { animation: aboutFadeUp 1s ease-out 0.1s forwards; }
-        .about-hero-fade-2 { animation: aboutFadeUp 1s ease-out 0.3s forwards; }
-        .about-hero-fade-3 { animation: aboutFadeUp 1s ease-out 0.55s forwards; }
-        .about-hero-fade-4 { animation: aboutFadeUp 1s ease-out 0.75s forwards; }
-      `}</style>
-
+    <section
+      ref={sectionRef}
+      className="relative flex flex-col w-full overflow-hidden bg-charcoal"
+      style={{ minHeight: 'calc(100svh - 68px)' }}
+      aria-labelledby="about-hero-heading"
+    >
+      {/* ── Background image with parallax container ─────────────────── */}
       <div
-        className="relative w-full overflow-hidden bg-black"
-        style={{ height: 'calc(100vh - 68px)' }}
+        ref={imgWrapRef}
+        aria-hidden
+        className="absolute will-change-transform"
+        style={{ inset: '-10% 0' }}
       >
-        {/* Silk canvas */}
-        <canvas
-          ref={canvasRef}
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}
+        <Image
+          src="/about-hero-bg.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
         />
+      </div>
 
-        {/* Gradient overlay — heavier at bottom for text legibility */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-transparent to-black/65" />
+      {/* ── Scrim + gradient overlays ─────────────────────────────────── */}
+      <div aria-hidden className="absolute inset-0 bg-charcoal/48" />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: [
+            'linear-gradient(to bottom, rgba(37,36,33,0.5) 0%, transparent 28%)',
+            'linear-gradient(to top, rgba(37,36,33,0.92) 0%, rgba(37,36,33,0.6) 32%, transparent 62%)',
+          ].join(', '),
+        }}
+      />
 
-        {/* Centered content */}
-        <div className="relative z-20 flex h-full flex-col items-center justify-center text-center px-6 md:px-10">
+      {/* ── Content: anchored to bottom-left ─────────────────────────── */}
+      <div className="relative z-10 mt-auto px-6 pb-10 md:px-10 md:pb-14 lg:px-16 lg:pb-20">
+        <div className="max-w-[680px]">
 
-          {/* Eyebrow label */}
-          <p
-            className={`mb-6 text-xs tracking-[0.3em] uppercase text-white/45 opacity-0 ${isLoaded ? 'about-hero-fade-1' : ''}`}
-          >
-            About
+          {/* Eyebrow */}
+          <p className="ah-eyebrow mb-5 type-eyebrow text-ivory/55">
+            About Credence Asia
           </p>
 
-          {/* Main heading */}
-          <h1
-            className={`
-              text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[9rem]
-              font-light tracking-[-0.04em] leading-none text-white opacity-0
-              ${isLoaded ? 'about-hero-fade-2' : ''}
-            `}
-            style={{ textShadow: '0 0 60px rgba(255,255,255,0.06)' }}
-          >
-            {title ?? 'Credence Asia Group'}
+          {/* Heading — each word wrapped for masked reveal */}
+          <h1 id="about-hero-heading">
+            {headingLines.map((line, i) => (
+              <span key={i} className="block overflow-hidden leading-none">
+                <span
+                  className="ah-word inline-block font-serif font-semibold text-ivory"
+                  style={{
+                    fontSize: 'clamp(2.4rem, 5.5vw, 5rem)',
+                    lineHeight: '1.08',
+                    letterSpacing: '-0.025em',
+                  }}
+                >
+                  {line}
+                </span>
+              </span>
+            ))}
           </h1>
 
-          {/* Thin rule */}
-          <div
-            className={`mt-8 mb-7 w-10 h-px bg-white/25 opacity-0 ${isLoaded ? 'about-hero-fade-3' : ''}`}
-          />
-
-          {/* Intro paragraph */}
-          <p
-            className={`
-              max-w-lg text-sm md:text-base font-light leading-relaxed tracking-wide
-              text-white/55 opacity-0
-              ${isLoaded ? 'about-hero-fade-4' : ''}
-            `}
-          >
+          {/* Supporting copy */}
+          <p className="ah-body mt-6 max-w-[52ch] type-body text-ivory/65">
             {introText ??
-              'Proven, end-to-end apparel sourcing across Asia — linking European design knowledge with disciplined manufacturing and trusted long-term partnerships.'}
+              'Credence Asia brings design, sourcing, product development, production, quality, and logistics together through one connected apparel network.'}
           </p>
 
-          {/* Pill badges */}
-          <div
-            className={`mt-10 flex items-center gap-5 text-white/35 opacity-0 ${isLoaded ? 'about-hero-fade-4' : ''}`}
-          >
-            <span className="text-[10px] tracking-[0.25em] uppercase">Design</span>
-            <span className="text-white/20">•</span>
-            <span className="text-[10px] tracking-[0.25em] uppercase">Source</span>
-            <span className="text-white/20">•</span>
-            <span className="text-[10px] tracking-[0.25em] uppercase">Deliver</span>
-          </div>
-        </div>
-
-        {/* Corner year stamp */}
-        <div className="absolute bottom-8 right-8 z-30 text-[10px] tracking-widest uppercase text-white/20">
-          Est. 2016
+          {/* Proof row */}
+          <dl className="ah-proof mt-8 flex flex-wrap gap-x-8 gap-y-3 border-t border-ivory/12 pt-6">
+            {PROOF.map((p) => (
+              <div key={p.label}>
+                <dt className="type-eyebrow text-ivory/35">{p.label}</dt>
+                <dd className="mt-0.5 type-label text-ivory/85">{p.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
-    </>
-  );
+
+      {/* ── Scroll indicator — desktop only ──────────────────────────── */}
+      <div
+        className="ah-scroll pointer-events-none absolute bottom-10 right-8 z-10 hidden flex-col items-center gap-2 md:flex"
+        aria-hidden
+      >
+        <span className="type-eyebrow text-ivory/30" style={{ writingMode: 'vertical-lr', letterSpacing: '0.22em' }}>
+          Scroll
+        </span>
+        <div className="relative h-12 w-px overflow-hidden bg-ivory/12">
+          <div
+            className="absolute left-0 top-0 w-full bg-ivory/55"
+            style={{ height: '40%', animation: 'scroll-line 2s cubic-bezier(0.4,0,0.6,1) infinite' }}
+          />
+        </div>
+      </div>
+
+      {/* ── Corner stamp ─────────────────────────────────────────────── */}
+      <p
+        className="pointer-events-none absolute bottom-10 right-10 z-10 hidden type-eyebrow text-ivory/18 md:block"
+        aria-hidden
+      >
+        Est. 2016
+      </p>
+    </section>
+  )
 }
