@@ -12,12 +12,6 @@ interface AboutHeroProps {
   introText?: string
 }
 
-const PROOF = [
-  { value: '2016',        label: 'Founded' },
-  { value: 'Hong Kong',   label: 'Headquarters' },
-  { value: 'Copenhagen',  label: 'Design hub' },
-  { value: '6+',          label: 'Manufacturing countries' },
-]
 
 export default function AboutHero({ title, introText }: AboutHeroProps) {
   const sectionRef  = useRef<HTMLElement>(null)
@@ -31,11 +25,10 @@ export default function AboutHero({ title, introText }: AboutHeroProps) {
       gsap.set('.ah-eyebrow', { opacity: 0, y: 10 })
       gsap.set('.ah-word',    { yPercent: 110 })
       gsap.set('.ah-body',    { opacity: 0, y: 18 })
-      gsap.set('.ah-proof > *', { opacity: 0, y: 10 })
       gsap.set('.ah-scroll',  { opacity: 0 })
 
       if (reduced) {
-        gsap.set(['.ah-eyebrow', '.ah-body', '.ah-proof > *', '.ah-scroll'], { opacity: 1, y: 0 })
+        gsap.set(['.ah-eyebrow', '.ah-body', '.ah-scroll'], { opacity: 1, y: 0 })
         gsap.set('.ah-word', { yPercent: 0 })
         return
       }
@@ -59,8 +52,7 @@ export default function AboutHero({ title, introText }: AboutHeroProps) {
       tl.to('.ah-eyebrow', { opacity: 1, y: 0, duration: 0.65 }, 0.2)
       tl.to('.ah-word',    { yPercent: 0, duration: 1, ease: 'power4.out', stagger: 0.1 }, 0.38)
       tl.to('.ah-body',    { opacity: 1, y: 0, duration: 0.75 }, 0.9)
-      tl.to('.ah-proof > *', { opacity: 1, y: 0, duration: 0.5, stagger: 0.06 }, 1.1)
-      tl.to('.ah-scroll',  { opacity: 1, duration: 0.5 }, 1.3)
+      tl.to('.ah-scroll',  { opacity: 1, duration: 0.5 }, 1.1)
     }, sectionRef)
 
     return () => ctx.revert()
@@ -141,15 +133,6 @@ export default function AboutHero({ title, introText }: AboutHeroProps) {
               'Credence Asia brings design, sourcing, product development, production, quality, and logistics together through one connected apparel network.'}
           </p>
 
-          {/* Proof row */}
-          <dl className="ah-proof mt-8 flex flex-wrap gap-x-8 gap-y-3 border-t border-ivory/12 pt-6">
-            {PROOF.map((p) => (
-              <div key={p.label}>
-                <dt className="type-eyebrow text-ivory/35">{p.label}</dt>
-                <dd className="mt-0.5 type-label text-ivory/85">{p.value}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </div>
 
