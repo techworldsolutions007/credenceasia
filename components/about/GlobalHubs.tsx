@@ -129,8 +129,7 @@ export default function GlobalHubs() {
             <AnimateIn
               key={hub.id}
               delay={i * 0.14}
-              className="flex flex-col p-8 md:p-10 xl:p-12"
-              style={{ background: 'var(--color-sage)' }}
+              className="flex flex-col bg-sage p-8 md:p-10 xl:p-12"
             >
               {/* Image */}
               <div className="relative mb-8 h-52 overflow-hidden border border-charcoal/15 sm:h-64">
