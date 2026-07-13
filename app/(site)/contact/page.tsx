@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import {client} from '@/sanity/lib/client'
 import {contactPageQuery} from '@/sanity/lib/queries'
-import SmartImage from '@/components/shared/SmartImage'
 import ContactForm from './ContactForm'
 import AnimateIn from '@/components/shared/AnimateIn'
 
@@ -176,21 +175,6 @@ export default async function ContactPage() {
               Open in Google Maps
             </a>
 
-            {/* Optional building photo from /public/assets/office or Sanity */}
-            <div>
-              <p className="type-eyebrow mb-3 text-clay">
-                Hope Sea Industrial Centre
-              </p>
-              <SmartImage
-                source={data?.image}
-                ratio="3/2"
-                tone="light"
-                alt="Hope Sea Industrial Centre, Kowloon Bay"
-                label="Office. Hope Sea Industrial Centre, Kowloon Bay"
-                width={1200}
-                height={800}
-              />
-            </div>
           </div>
         </div>
       </section>
