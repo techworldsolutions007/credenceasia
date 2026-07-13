@@ -10,7 +10,7 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Contact | Credence Asia Group',
   description:
-    'Contact Credence Asia Group. Two named directors in Hong Kong handling all sourcing, product development and production enquiries.',
+    'Contact Credence Asia Group. Operational hub in Hong Kong and design hub in Copenhagen — one team handling sourcing, product development and production.',
 }
 
 const CONTACTS = [
@@ -60,7 +60,7 @@ export default async function ContactPage() {
           <AnimateIn><p className="type-eyebrow mb-5 text-soil/70">Contact us</p></AnimateIn>
           <AnimateIn delay={0.1}>
             <h1 className="type-hero mb-7 text-charcoal">
-              {data?.title ?? 'Brief our team in Hong Kong.'}
+              {data?.title ?? 'Brief our team.'}
             </h1>
           </AnimateIn>
           <AnimateIn delay={0.2}>
@@ -130,19 +130,29 @@ export default async function ContactPage() {
           </div>
 
           <div className="flex flex-col gap-8">
-            <div>
-              <p className="type-eyebrow mb-3 text-clay">
-                Hong Kong office
-              </p>
-              <p className="whitespace-pre-line type-body text-charcoal/85">
-                {data?.address ?? OFFICE_ADDRESS}
-              </p>
-              <a
-                href={`tel:${OFFICE_PHONE_HREF}`}
-                className="mt-3 inline-block type-small text-charcoal/85 transition-colors hover:text-soil"
-              >
-                {data?.phone ?? OFFICE_PHONE}
-              </a>
+            {/* Office locations */}
+            <div className="grid grid-cols-1 gap-px bg-beige/40 sm:grid-cols-2">
+              <div className="bg-cream p-6">
+                <p className="type-eyebrow mb-3 text-clay">Hong Kong</p>
+                <p className="type-label mb-1 text-charcoal">Operational Hub</p>
+                <p className="whitespace-pre-line type-small text-charcoal/70">
+                  {data?.address ?? OFFICE_ADDRESS}
+                </p>
+                <a
+                  href={`tel:${OFFICE_PHONE_HREF}`}
+                  className="mt-3 inline-block type-small text-charcoal/70 transition-colors hover:text-soil"
+                >
+                  {data?.phone ?? OFFICE_PHONE}
+                </a>
+              </div>
+              <div className="bg-cream p-6">
+                <p className="type-eyebrow mb-3 text-clay">Copenhagen</p>
+                <p className="type-label mb-1 text-charcoal">Design Hub</p>
+                <p className="type-small text-charcoal/70">Denmark</p>
+                <p className="mt-3 type-small text-charcoal/70">
+                  Colour, print, trend direction and range planning.
+                </p>
+              </div>
             </div>
 
             <div className="aspect-[4/3] overflow-hidden border border-beige/60">
