@@ -16,10 +16,10 @@ const STATS = [
 const CERT_LOGOS = [30, 31, 32, 33, 34, 35, 36, 37].map((n) => ({
   src: `/assets/logos/certificates/${n}.png`,
   name: [
-    'BCI — Better Cotton Initiative',
+    'BCI (Better Cotton Initiative)',
     'REPREVE',
     'Global Recycled Standard',
-    'Refibra — TENCEL Fiber',
+    'Refibra (TENCEL Fiber)',
     'LENZING EcoVero',
     'Naia Renew',
     'Organic Blended Content Standard',

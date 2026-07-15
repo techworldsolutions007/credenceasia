@@ -45,21 +45,24 @@ export default function Navbar() {
             : 'bg-transparent',
         ].join(' ')}
       >
-        <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between px-6 md:px-10">
-          {/* Logo */}
-          <Link href="/" className="flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soil">
+        <div className="site-container flex h-20 items-center">
+          {/* Logo — left slot */}
+          <Link href="/" className="flex-shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soil">
             <Image
               src="/credence_asia_logo_hd_transparent.png"
               alt="Credence Asia Group"
-              width={140}
-              height={44}
+              width={200}
+              height={64}
               priority
-              style={{ width: '150px', height: 'auto', objectFit: 'contain' }}
+              style={{ width: '228px', height: 'auto', objectFit: 'contain' }}
             />
           </Link>
 
-          {/* Desktop links */}
-          <nav className="hidden items-center gap-9 lg:flex" aria-label="Main navigation">
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Right slot — nav links */}
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
             {NAV_LINKS.map((link) => {
               const isActive =
                 link.href === '/'
@@ -71,10 +74,11 @@ export default function Navbar() {
                   href={link.href}
                   aria-current={isActive ? 'page' : undefined}
                   className={[
-                    'relative pb-1 text-[13px] font-medium tracking-[0.12em] uppercase transition-colors duration-200',
+                    'relative pb-1 text-[14px] font-medium tracking-[0.12em] uppercase motion-safe:transition-colors motion-safe:duration-200',
                     isActive ? 'text-soil' : 'text-charcoal/70 hover:text-charcoal',
-                    "after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-soil after:transition-all after:duration-300",
+                    'after:absolute after:bottom-0 after:left-0 after:h-[2px] after:bg-soil after:transition-all after:duration-300',
                     isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full',
+                    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soil',
                   ].join(' ')}
                 >
                   {link.label}
@@ -83,24 +87,10 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden lg:block">
-            <Link
-              href="/contact"
-              className="group relative inline-flex h-10 items-center overflow-hidden bg-soil px-7 type-label text-ivory transition-colors duration-300 hover:bg-moss focus-visible:outline focus-visible:outline-2 focus-visible:outline-soil"
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/15 to-transparent group-hover:animate-[shimmer-slide_0.65s_ease-in-out_forwards]"
-              />
-              <span className="relative">Start an Enquiry</span>
-            </Link>
-          </div>
-
           {/* Mobile hamburger */}
           <button
             onClick={() => setOpen((v) => !v)}
-            className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-soil"
+            className="ml-auto flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-soil"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
           >
@@ -134,7 +124,7 @@ export default function Navbar() {
         ].join(' ')}
         aria-hidden={!open}
       >
-        <div className="flex h-[68px] items-center px-6" />
+        <div className="flex h-20 items-center px-6" />
         <nav
           className="flex flex-1 flex-col items-start justify-center gap-2 px-8"
           aria-label="Mobile navigation"

@@ -74,7 +74,7 @@ export default function AboutFeatureGrid() {
           <div className="flex flex-col gap-4">
             <p className="max-w-[44ch] type-body text-charcoal/70">
               Founded in 2016 in Hong Kong, we bridge European design knowledge
-              with disciplined Asian manufacturing — one accountable team from
+              with disciplined Asian manufacturing, one accountable team from
               first sketch to final delivery.
             </p>
             <p className="max-w-[44ch] type-body text-charcoal/55">
@@ -116,7 +116,7 @@ export default function AboutFeatureGrid() {
 
           <div className="flex flex-col gap-4">
             <p className="max-w-[44ch] type-body text-charcoal/70">
-              Design, sampling, production, QC and logistics — across six
+              Design, sampling, production, QC and logistics across six
               countries, managed from Hong Kong with full transparency at
               every stage.
             </p>

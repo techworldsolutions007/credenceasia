@@ -106,7 +106,7 @@ export default function QualitySystem() {
             </h2>
             <p className="mt-5 max-w-[46ch] type-body text-charcoal/65">
               Every production programme follows the same inspection pathway. From
-              material to shipment, quality is built in at every stage — not
+              material to shipment, quality is built in at every stage, not
               inspected in at the end.
             </p>
           </div>

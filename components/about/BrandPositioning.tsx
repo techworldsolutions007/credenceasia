@@ -66,7 +66,7 @@ export default function BrandPositioning() {
             </p>
             <p className="type-body text-charcoal/50">
               We work across womenswear, menswear, kidswear, outerwear, activewear,
-              and workwear — with the category depth to move from brief to bulk
+              and workwear, with the category depth to move from brief to bulk
               without losing the design intention that makes a garment sell.
             </p>
           </AnimateIn>

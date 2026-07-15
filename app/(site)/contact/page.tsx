@@ -9,7 +9,7 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Contact | Credence Asia Group',
   description:
-    'Contact Credence Asia Group. Operational hub in Hong Kong and design hub in Copenhagen — one team handling sourcing, product development and production.',
+    'Contact Credence Asia Group. Operational hub in Hong Kong and design hub in Copenhagen, one team handling sourcing, product development and production.',
 }
 
 const CONTACTS = [

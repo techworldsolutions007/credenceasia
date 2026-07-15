@@ -74,7 +74,7 @@ export default function FinalCTA({ctaText}: Props) {
 
   const subtext =
     ctaText ??
-    'Direct line to our founding team — share what you need and we will come back with the right production pathway within one business day.'
+    'Direct line to our founding team. Share what you need and we will come back with the right production pathway within one business day.'
 
   return (
     <section ref={ref} className="overflow-hidden" style={{background: 'var(--color-cream)'}}>
@@ -84,8 +84,8 @@ export default function FinalCTA({ctaText}: Props) {
         <div className="fcta-img-wrap relative h-72 overflow-hidden sm:h-96 xl:h-full">
           <div className="fcta-img-inner relative h-full">
             <Image
-              src="/manufacturing-studio.png"
-              alt="Credence Asia manufacturing studio"
+              src="/contact.png"
+              alt="Credence Asia contact"
               fill
               className="object-cover object-center"
               sizes="(max-width: 1280px) 100vw, 50vw"

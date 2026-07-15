@@ -136,7 +136,7 @@ export default function CustomersPreview({customersText}: Props) {
           </h2>
           <p className="type-body mt-5 max-w-[48ch] text-charcoal/65">
             {customersText ??
-              'From Scandinavian fashion houses and American retail chains to European automotive workwear — 25+ brands trust Credence Asia for consistent quality and ethical production.'}
+              'From Scandinavian fashion houses and American retail chains to European automotive workwear. 25+ brands trust Credence Asia for consistent quality and ethical production.'}
           </p>
         </div>
 

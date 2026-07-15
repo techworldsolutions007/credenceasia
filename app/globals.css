@@ -99,6 +99,15 @@ h1, h2, h3 {
      • Italic allowed on Work Sans (type-quote)
   ── */
 @layer components {
+  /* Shared layout container — used by every section and the header.
+     max-width 1600px, fluid gutter 24px → 64px. */
+  .site-container {
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: clamp(1.5rem, 4vw, 4rem);
+  }
+
   /* Page and section heroes */
   .type-hero {
     font-family: var(--font-serif);

@@ -20,18 +20,19 @@ export type Country = {
 }
 
 const FALLBACK: Country[] = [
-  {_id: 'bgd', name: 'Bangladesh', tag: 'Flagship. Knits and Woven', svgId: 'BGD', role: 'Two custom-bonded units: 36 lines, 3,000 machines and 3,700 people producing one million pieces a month — with embroidery and washing in-house.'},
+  {_id: 'bgd', name: 'Bangladesh', tag: 'Flagship. Knits and Woven', svgId: 'BGD', role: 'Two custom-bonded units: 36 lines, 3,000 machines and 3,700 people producing one million pieces a month, with embroidery and washing in-house.'},
   {_id: 'chn', name: 'China',      tag: 'Jackets and Workwear',      svgId: 'CHN', role: 'Specialist outerwear and workwear facility. 200 machines and 400 workers building one million pieces a year, with materials and trims sourced at origin.'},
   {_id: 'ind', name: 'India',      tag: 'Activewear and Beachwear',  svgId: 'IND', role: 'Activewear, tops, blouses, beachwear and coordinates. 350+ machines with 1.2 million pieces of annual capacity.'},
   {_id: 'khm', name: 'Cambodia',   tag: 'Casualwear and Uniforms',   svgId: 'KHM', role: 'Casual and uniform-grade programmes through long-standing, audited partner factories.'},
   {_id: 'mmr', name: 'Myanmar',    tag: 'Partner Capacity',          svgId: 'MMR', role: 'Flexible cut-and-sew capacity through audited partner factories, scaled to season and channel.'},
   {_id: 'vnm', name: 'Vietnam',    tag: 'Woven and Knits',           svgId: 'VNM', role: 'Scalable cut-and-sew capacity for woven and knit programmes through trusted partner factories.'},
+  {_id: 'afr', name: 'Africa',     tag: 'Knits and Woven',           svgId: 'AFR', role: 'Knit and woven programmes through vetted partner facilities across key African manufacturing hubs.'},
 ]
 
 const HUBS = [
-  {label: 'Design Hub',  location: 'Copenhagen, Denmark', body: 'Colour, print, graphics, silhouette and washing research, translated into brand-specific range plans before the first sample is cut.'},
-  {label: 'Group HQ',    location: 'Hong Kong',           body: 'Founded here in 2016. One named team runs sourcing, costing, sampling and freight — a single accountable pathway from enquiry to delivery.'},
-  {label: 'Commercial',  location: 'Europe and Americas', body: 'Customer-facing teams in European and American markets, keeping design decisions and market insight close to where our partners sell.'},
+  {label: 'Design Hub',           location: 'Copenhagen & New York', body: 'Colour, print, graphics, silhouette and washing research, with East Coast presence bridging American market trends into brand-specific range plans.'},
+  {label: 'Marketing and Finance', location: 'Hong Kong',            body: 'Founded here in 2016. One named team runs sourcing, costing, sampling and freight: a single accountable pathway from enquiry to delivery.'},
+  {label: 'Commercial',           location: 'Global Markets',        body: 'Active across key retail and sourcing markets globally, keeping brand decisions and production timelines aligned wherever our partners operate.'},
 ]
 
 type Props = {countries?: Country[]}
@@ -47,7 +48,7 @@ export default function ProductionMapSection({countries}: Props) {
     const ctx = gsap.context(() => {
       const fmt = new Intl.NumberFormat('en-US')
       const counters: Array<{selector: string; end: number; render: (v: number) => string}> = [
-        {selector: '.pms-count-countries', end: 6,    render: (v) => String(Math.round(v))},
+        {selector: '.pms-count-countries', end: 7,    render: (v) => String(Math.round(v))},
         {selector: '.pms-count-monthly',   end: 1,    render: (v) => `${Math.round(v)}M+`},
         {selector: '.pms-count-annual',    end: 14,   render: (v) => `${Math.round(v)}M+`},
         {selector: '.pms-count-workers',   end: 3700, render: (v) => `${fmt.format(Math.round(v))}+`},
@@ -87,7 +88,7 @@ export default function ProductionMapSection({countries}: Props) {
               className="type-h2 text-charcoal"
             >
               <span className="font-light text-soil/70">Production</span>{' '}
-              <span className="font-semibold">across six countries.</span>
+              <span className="font-semibold">across seven countries.</span>
             </h2>
             <p className="type-label mt-3 text-soil/70">
               Plus design and commercial hubs in Europe and the Americas.
@@ -101,7 +102,7 @@ export default function ProductionMapSection({countries}: Props) {
             transition={{duration: 0.7, delay: 0.15, ease: 'easeOut'}}
           >
             Design in Copenhagen, coordination from Hong Kong and audited
-            factories across six countries — one accountable pathway from
+            factories across seven countries, one accountable pathway from
             first sketch to final delivery.
           </motion.p>
         </div>
@@ -137,9 +138,7 @@ export default function ProductionMapSection({countries}: Props) {
               key={loc._id}
               id={`country-card-${loc.svgId ?? loc.name}`}
               role="listitem"
-              className={`group relative flex flex-col overflow-hidden bg-ivory p-6 transition-all duration-300 hover:bg-cream/80 hover:shadow-[inset_0_0_0_1px_rgba(87,105,74,0.12)] md:p-8 ${
-                i === 0 ? 'lg:col-span-2' : ''
-              }`}
+              className="group relative flex flex-col overflow-hidden bg-ivory p-6 transition-all duration-300 hover:bg-cream/80 hover:shadow-[inset_0_0_0_1px_rgba(87,105,74,0.12)] md:p-8"
               initial={{y: 20, opacity: 0}}
               whileInView={{y: 0, opacity: 1}}
               viewport={{once: true, amount: 0.2}}
@@ -152,12 +151,6 @@ export default function ProductionMapSection({countries}: Props) {
                 style={{background: 'linear-gradient(90deg, var(--color-leaf), var(--color-sage), var(--color-leaf))'}}
               />
 
-              <div className="mb-1 flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-leaf/60 transition-colors duration-300 group-hover:bg-leaf" />
-                <span className="text-[9px] uppercase tracking-[0.22em] text-clay">
-                  {loc.tag ?? 'Production'}
-                </span>
-              </div>
               <h3 className="type-h3 mb-3 text-charcoal">
                 {loc.name}
               </h3>
@@ -168,7 +161,7 @@ export default function ProductionMapSection({countries}: Props) {
           {/* 6th cell — aggregated network summary, same card grammar */}
           <motion.div
             role="listitem"
-            className="pms-stats-card flex flex-col justify-center bg-cream p-6 sm:col-span-2 md:p-8"
+            className="pms-stats-card flex flex-col justify-center bg-cream p-6 lg:col-span-2 md:p-8"
             initial={{y: 20, opacity: 0}}
             whileInView={{y: 0, opacity: 1}}
             viewport={{once: true, amount: 0.2}}
@@ -183,7 +176,7 @@ export default function ProductionMapSection({countries}: Props) {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="pms-count-countries font-serif text-2xl font-bold tracking-tight text-charcoal">6</p>
+                <p className="pms-count-countries font-serif text-2xl font-bold tracking-tight text-charcoal">7</p>
                 <p className="type-label mt-1.5 text-clay">Countries</p>
               </div>
               <div>

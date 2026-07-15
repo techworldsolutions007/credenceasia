@@ -89,7 +89,7 @@ export default async function CollectionPage() {
             </h1>
           </div>
           <p className="hidden text-right type-small text-charcoal/55 md:block md:max-w-[38ch]">
-            Women, Men &amp; Kids — woven, knits, denim and outerwear.
+            Women, Men &amp; Kids: woven, knits, denim and outerwear.
           </p>
         </div>
       </div>

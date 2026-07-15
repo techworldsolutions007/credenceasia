@@ -8,7 +8,7 @@ export default function SustainabilityMedia() {
       <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[440px]">
         <Image
           src="/manufacturing-studio.png"
-          alt="Credence Asia Group production facility — responsible manufacturing"
+          alt="Credence Asia Group production facility, responsible manufacturing"
           fill
           sizes="(max-width: 1024px) 100vw, (max-width: 1360px) 50vw, 680px"
           className="object-cover"

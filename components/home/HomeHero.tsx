@@ -213,14 +213,15 @@ const NAV_LINKS = [
 
 const SLIDES = [
   {src: '/hero-atelier.png',         alt: 'Design atelier, Copenhagen'},
-  {src: '/manufacturing-studio.png', alt: 'Manufacturing studio, Asia'},
-  {src: '/hero3.png', alt: 'Product capabilities'},
+  {src: '/hero2.png', alt: 'Production, Asia'},
+  {src: '/hero3sus1.png', alt: 'Product capabilities'},
   {src: '/sustainable-fibers.png',   alt: 'Sustainable fibers'},
 ]
 
 export default function HomeHero({data: _data}: {data: HomePageData}) {
   const [active, setActive]         = useState(0)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled]     = useState(false)
 
   // Auto-advance. Re-runs whenever `active` changes, so a manual selection
   // resets the 5s window instead of jump-cutting mid-interval.
@@ -234,6 +235,13 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
+
+  // Scrolled state for nav background — plain listener, no GSAP needed for a threshold toggle.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    window.addEventListener('scroll', onScroll, {passive: true})
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const prev = () => setActive(i => (i - 1 + SLIDES.length) % SLIDES.length)
   const next = () => setActive(i => (i + 1) % SLIDES.length)
@@ -261,7 +269,7 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
       ))}
 
       {/* Warm earthy scrim */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] bg-charcoal/60" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] bg-charcoal/50" />
 
       {/* Directional gradient — heavy bottom darkening for text legibility */}
       <div
@@ -269,54 +277,58 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
         className="pointer-events-none absolute inset-0 z-10"
         style={{
           background: [
-            'linear-gradient(to bottom, rgba(37,36,33,0.55) 0%, rgba(37,36,33,0.0) 40%)',
-            'linear-gradient(to top,   rgba(37,36,33,0.92) 0%, rgba(37,36,33,0.55) 35%, rgba(37,36,33,0.0) 60%)',
+            'linear-gradient(to bottom, rgba(37,36,33,0.45) 0%, rgba(37,36,33,0.0) 40%)',
+            'linear-gradient(to top,   rgba(37,36,33,0.82) 0%, rgba(37,36,33,0.45) 35%, rgba(37,36,33,0.0) 60%)',
           ].join(', '),
         }}
       />
 
-      {/* ── Embedded navigation bar ── */}
-      <div className="absolute top-0 left-0 right-0 z-[35]">
-        <div className="mx-auto flex h-[68px] max-w-[1600px] items-center justify-between px-6 md:px-10">
+      {/* ── Header scrim — 120px gradient behind the nav, independent of photo brightness ── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 left-0 right-0 z-[34] h-[120px]"
+        style={{background: 'linear-gradient(to bottom, rgba(37,36,33,0.72) 0%, transparent 100%)'}}
+      />
 
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ivory" aria-label="Credence Asia Group — home">
+      {/* ── Embedded navigation bar ── */}
+      <div
+        className={[
+          'absolute top-0 left-0 right-0 z-[35] motion-safe:transition-all motion-safe:duration-300',
+          scrolled
+            ? 'bg-charcoal/92 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,0.06)]'
+            : 'bg-transparent',
+        ].join(' ')}
+      >
+        <div className="site-container flex h-[68px] items-center">
+
+          {/* Logo — left slot */}
+          <Link href="/" className="flex-shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ivory" aria-label="Credence Asia Group home">
             <Image
               src="/credence_asia_logo_hd_transparent.png"
               alt="Credence Asia Group"
-              width={140}
-              height={44}
+              width={200}
+              height={64}
               priority
-              style={{width: '148px', height: 'auto'}}
+              style={{width: '219px', height: 'auto'}}
               className="brightness-0 invert"
             />
           </Link>
 
-          {/* Desktop nav links — absolutely centred on the bar */}
-          <nav
-            className="hidden lg:flex items-center gap-9 absolute left-1/2 -translate-x-1/2"
-            aria-label="Main navigation"
-          >
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Right slot — nav links */}
+          <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
             {NAV_LINKS.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-[13px] font-medium tracking-[0.12em] uppercase text-ivory/75 hover:text-ivory transition-colors duration-200"
+                className="text-[14px] font-medium tracking-[0.12em] uppercase text-ivory/75 hover:text-ivory motion-safe:transition-colors motion-safe:duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ivory"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-
-          {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center flex-shrink-0">
-            <Link
-              href="/contact"
-              className="inline-flex h-9 items-center px-5 type-label text-charcoal bg-ivory/95 hover:bg-ivory transition-all duration-200"
-            >
-              Start Enquiry
-            </Link>
-          </div>
 
           {/* Mobile hamburger */}
           <button
@@ -406,17 +418,6 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
 
         {/* Story block — vertically occupies the lower ~50% */}
         <div className="mt-auto">
-          {/* Eyebrow */}
-          <div className="hh-sub mb-4 flex items-center gap-3">
-            <span className="block h-px w-6 bg-ivory/55 flex-shrink-0" />
-            <span
-              className="text-[9px] uppercase tracking-[0.38em] text-ivory font-medium"
-              style={{textShadow: '0 1px 6px rgba(0,0,0,0.7)'}}
-            >
-              Credence Asia Group
-            </span>
-          </div>
-
           {/* Headline */}
           <h1
             className="font-serif text-[2.5rem] font-semibold text-ivory leading-[1.1]"
@@ -476,20 +477,11 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
       {/* ═══════════════════════════════════════════════════════════
            DESKTOP layout  (hidden below lg)
       ══════════════════════════════════════════════════════════ */}
-      <div className="hidden lg:flex absolute bottom-0 left-0 right-0 z-30 items-end justify-between px-16 pb-14">
+      <div className="hidden lg:block absolute bottom-0 left-0 right-0 z-30 pb-14">
+      <div className="site-container flex items-end justify-between">
 
         {/* Bottom-left: story block */}
         <div className="max-w-[520px]">
-          <div className="hh-sub mb-5 flex items-center gap-3">
-            <span className="block h-px w-8 bg-ivory/60" />
-            <span
-              className="type-eyebrow text-ivory"
-              style={{textShadow: '0 1px 6px rgba(0,0,0,0.6)'}}
-            >
-              Credence Asia Group
-            </span>
-          </div>
-
           <h1
             className="font-serif text-[3.9rem] font-semibold text-ivory xl:text-[4.75rem]"
             style={{textShadow: '0 2px 24px rgba(0,0,0,0.55), 0 1px 6px rgba(0,0,0,0.4)'}}
@@ -544,7 +536,8 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
             <ChevronRight size={15} strokeWidth={1.75} />
           </button>
         </div>
-      </div>
+      </div>{/* end site-container */}
+      </div>{/* end desktop layout shell */}
     </section>
   )
 }
