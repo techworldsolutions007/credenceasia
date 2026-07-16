@@ -21,12 +21,12 @@ gsap.registerPlugin(ScrollTrigger)
 // ─── Module-level: projection & path data computed once at load time ──────────
 
 const W = 960
-const H = 360
+const H = 500
 const VIEWBOX_PAD = 24
 const MOBILE_QUERY = '(max-width: 639px)'
 
-// Region we want visible: 25°W–150°E, 58°N–10°S (Western Europe → SE Asia).
-const REGION = { west: -25, east: 150, south: -10, north: 58 }
+// Region we want visible: 90°W–150°E, 60°N–40°S (New York + Africa → SE Asia).
+const REGION = { west: -90, east: 150, south: -40, north: 60 }
 
 // Bounding polygon fed to fitExtent. Two subtleties:
 //
@@ -43,11 +43,11 @@ const REGION = { west: -25, east: 150, south: -10, north: 58 }
 //      the top and bottom edges every 5° keeps them on their parallel of latitude.
 const BOUNDS_POLY = (() => {
   const ring: [number, number][] = []
-  // Top edge west→east along 58°N (TL → TR)
+  // Top edge west→east along 60°N (TL → TR)
   for (let lng = REGION.west; lng < REGION.east; lng += 5) ring.push([lng, REGION.north])
   ring.push([REGION.east, REGION.north])   // TR
   ring.push([REGION.east, REGION.south])   // BR
-  // Bottom edge east→west along -10°S (BR → BL)
+  // Bottom edge east→west along -40°S (BR → BL)
   for (let lng = REGION.east - 5; lng > REGION.west; lng -= 5) ring.push([lng, REGION.south])
   ring.push([REGION.west, REGION.south])   // BL
   ring.push([REGION.west, REGION.north])   // close to TL
@@ -304,8 +304,8 @@ export default function PresenceMap() {
     <div ref={containerRef} className="mx-auto max-w-[960px] text-charcoal">
       {/* Mobile-only text note surfacing Copenhagen off-map */}
       {isMobile && (
-        <p className="mx-auto mb-3 max-w-[18rem] px-4 text-center type-eyebrow text-clay/80">
-          + Copenhagen design hub, managed from Hong Kong
+        <p className="mx-auto mb-3 max-w-[22rem] px-4 text-center type-eyebrow text-clay/80">
+          + Copenhagen &amp; New York design hubs
         </p>
       )}
 

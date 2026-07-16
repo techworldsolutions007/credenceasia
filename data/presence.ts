@@ -18,6 +18,10 @@ export interface PresenceMarker {
 }
 
 export const PRESENCE_MARKERS: PresenceMarker[] = [
+  { id: 'NYC', name: 'New York',   role: 'design-hub',
+    lat: 40.71, lng: -74.01,
+    note: 'Design hub on the East Coast.',
+    labelSide: 'right' },
   { id: 'CPH', name: 'Copenhagen', role: 'design-hub',
     lat: 55.68, lng: 12.57,
     note: 'Color, print, graphics, silhouette and washing research.',
@@ -78,7 +82,7 @@ export const ROLE_COLOR: Record<MarkerRole, string> = {
 
 export const ROLE_LABEL: Record<MarkerRole, string> = {
   production:   'Production',
-  'group-hq':   'Group HQ',
+  'group-hq':   'Marketing & Finance',
   'design-hub': 'Design Hub',
 }
 
@@ -92,4 +96,5 @@ export const HIGHLIGHT_BY_ISO_NUMERIC: Record<number, MarkerRole> = {
   208: 'design-hub',   // Denmark
   356: 'production',   // India
   704: 'production',   // Vietnam
+  840: 'design-hub',   // United States (New York)
 }
