@@ -3,8 +3,7 @@
  * Add / remove entries here to control what renders on the site.
  * Component reads this array — no other file needs editing.
  *
- * All current assets: 1000 × 250 px (4:1 wordmark).
- * When 15.png, 17.png, 18.png are ready, append them below.
+ * All current assets: 320 × 80 px (4:1 wordmark).
  */
 
 export type Partner = {
@@ -22,31 +21,21 @@ export type Partner = {
 
 const WM: Pick<Partner, 'shape' | 'intrinsic'> = {
   shape: 'wordmark',
-  intrinsic: {w: 1000, h: 250},
+  intrinsic: {w: 320, h: 80},
 }
 
-// ─── 15 approved logos (all 1000 × 250 wordmarks) ────────────────────────────
-// Files 15.png · 17.png · 18.png not yet in /public — add entries when ready.
+// ─── 10 approved logos (all 320 × 80 wordmarks) ──────────────────────────────
 export const PARTNERS: Partner[] = [
-  {name: 'Liberte Essentiel', src: '/assets/logos/customers/1.png',  ...WM},
-  {name: "co'couture",        src: '/assets/logos/customers/2.png',  ...WM},
-  {name: 'rosemunde',         src: '/assets/logos/customers/3.png',  ...WM},
-  {name: 'FREE/QUENT',        src: '/assets/logos/customers/4.png',  ...WM},
-  {name: 'Herff Jones',       src: '/assets/logos/customers/5.png',  ...WM},
-  {name: 'Walmart',           src: '/assets/logos/customers/6.png',  ...WM},
-  {name: 'BMW',               src: '/assets/logos/customers/7.png',  ...WM},
-  {name: 'COVERSTORY',        src: '/assets/logos/customers/8.png',  ...WM},
-  {name: 'NEO NOIR',          src: '/assets/logos/customers/9.png',  ...WM},
-  {name: 'U.S. Polo Assn.',   src: '/assets/logos/customers/10.png', ...WM},
-  {name: 'CLAAS',             src: '/assets/logos/customers/11.png', ...WM},
-  {name: 'STIHL',             src: '/assets/logos/customers/12.png', ...WM},
-  {name: 'MUFTI',             src: '/assets/logos/customers/13.png', ...WM},
-  {name: 'Volkswagen',        src: '/assets/logos/customers/14.png', ...WM},
-  {name: 'BALILAB',           src: '/assets/logos/customers/16.png', ...WM},
-  // Add when files are ready:
-  // {name: 'TJX',    src: '/assets/logos/customers/15.jpeg', ...WM},
-  // {name: '???',    src: '/assets/logos/customers/17.jpeg', ...WM},
-  // {name: '???',    src: '/assets/logos/customers/18.jpeg', ...WM},
+  {name: 'CLAAS',                src: '/assets/logos/customers/11.png', ...WM},
+  {name: 'STIHL',                src: '/assets/logos/customers/12.png', ...WM},
+  {name: 'MUFTI',                src: '/assets/logos/customers/13.png', ...WM},
+  {name: 'Volkswagen',           src: '/assets/logos/customers/14.png', ...WM},
+  {name: 'Five Seasons',         src: '/assets/logos/customers/15.png', ...WM},
+  {name: 'BALILAB',              src: '/assets/logos/customers/16.png', ...WM},
+  {name: 'World Wide Sportsman', src: '/assets/logos/customers/17.png', ...WM},
+  {name: 'Superdry',             src: '/assets/logos/customers/18.png', ...WM},
+  {name: 'Läderach',             src: '/assets/logos/customers/19.png', ...WM},
+  {name: 'MASCOT',               src: '/assets/logos/customers/20.png', ...WM},
 ]
 
 /** Grid shows fallback text instead of an empty/sparse grid below this count */

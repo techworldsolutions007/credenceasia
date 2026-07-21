@@ -9,12 +9,9 @@ import {PARTNERS, MIN_GRID_COUNT, FALLBACK_TRUST_LINE, type Partner} from './par
 gsap.registerPlugin(ScrollTrigger)
 
 /*
-  Grid layout: 3 cols (mobile) → 5 cols (md+)
-  15 logos ÷ 5 = 3 exact rows  |  15 ÷ 3 = 5 exact rows — zero ghost cells.
-  LCM(3, 5) = 15; ghostCount always 0 for this list size.
+  Grid layout: 2 cols (mobile) → 5 cols (md+)
+  10 logos ÷ 5 = 2 exact rows  |  10 ÷ 2 = 5 exact rows — zero ghost cells.
 */
-const COL_LCM = 15
-const ghostCount = (COL_LCM - (PARTNERS.length % COL_LCM)) % COL_LCM
 
 
 // ─── Sub-component ────────────────────────────────────────────────────────────
@@ -152,19 +149,12 @@ export default function CustomersPreview({customersText}: Props) {
           <div className="cp-grid">
             <ul
               role="list"
-              className="grid grid-cols-3 gap-3 md:grid-cols-5"
+              className="grid grid-cols-2 gap-3 md:grid-cols-5"
             >
               {PARTNERS.map(partner => (
                 <PartnerCell key={partner.src} partner={partner} />
               ))}
 
-              {Array.from({length: ghostCount}).map((_, i) => (
-                <li
-                  key={`ghost-${i}`}
-                  aria-hidden="true"
-                  className="h-24 rounded-xl bg-white"
-                />
-              ))}
             </ul>
           </div>
         )}
