@@ -3,7 +3,10 @@ import {Outfit, Work_Sans} from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
-import PageLoader from '@/components/PageLoader'
+// Opening animation. Video intro is active; the original CSS loader is kept
+// intact — to revert, swap this import (and the tag below) back to PageLoader.
+// import PageLoader from '@/components/PageLoader'
+import PageLoaderVideo from '@/components/PageLoaderVideo'
 import {client} from '@/sanity/lib/client'
 import {siteSettingsQuery} from '@/sanity/lib/queries'
 
@@ -34,7 +37,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
       className={`${outfit.variable} ${workSans.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-ivory text-charcoal">
-        <PageLoader />
+        <PageLoaderVideo />
         <SmoothScroll>
           {children}
           <Footer settings={settings} />

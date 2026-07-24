@@ -211,11 +211,14 @@ const NAV_LINKS = [
   {label: 'Contact',      href: '/contact'},
 ]
 
+// `src` is the wide desktop image; `mobileSrc` is an art-directed portrait (9:16)
+// crop of the same scene so the subject survives on narrow phone viewports where
+// object-cover would otherwise crop the landscape frame to an empty centre strip.
 const SLIDES = [
-  {src: '/hero-atelier.png',         alt: 'Design atelier, Copenhagen'},
-  {src: '/hero2.png', alt: 'Production, Asia'},
-  {src: '/hero3sus1.png', alt: 'Product capabilities'},
-  {src: '/sustainable-fibers.png',   alt: 'Sustainable fibers'},
+  {src: '/hero-atelier.png',       mobileSrc: '/hero-atelier-mobile.png',       alt: 'Design atelier, Copenhagen'},
+  {src: '/hero2.png',              mobileSrc: '/hero2-mobile.png',              alt: 'Production, Asia'},
+  {src: '/hero3sus1.png',          mobileSrc: '/hero3sus1-mobile.png',          alt: 'Product capabilities'},
+  {src: '/sustainable-fibers.png', mobileSrc: '/sustainable-fibers-mobile.png', alt: 'Sustainable fibers'},
 ]
 
 export default function HomeHero({data: _data}: {data: HomePageData}) {
@@ -257,12 +260,22 @@ export default function HomeHero({data: _data}: {data: HomePageData}) {
             i === active ? 'opacity-100' : 'opacity-0'
           }`}
         >
+          {/* Portrait crop for phones/tablets in portrait */}
+          <Image
+            src={slide.mobileSrc}
+            alt={slide.alt}
+            fill
+            sizes="100vw"
+            className="object-cover lg:hidden"
+            priority={i === 0}
+          />
+          {/* Wide crop for desktop */}
           <Image
             src={slide.src}
             alt={slide.alt}
             fill
             sizes="100vw"
-            className="object-cover"
+            className="hidden object-cover lg:block"
             priority={i === 0}
           />
         </div>
