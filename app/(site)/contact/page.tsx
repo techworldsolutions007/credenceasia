@@ -12,28 +12,10 @@ export const metadata: Metadata = {
     'Contact Credence Asia Group. Operational hub in Hong Kong and design hub in Copenhagen, one team handling sourcing, product development and production.',
 }
 
-const CONTACTS = [
-  {
-    name: 'Amita Prakash',
-    role: 'Director',
-    phone: '+852 6100 5224',
-    phoneHref: '+85261005224',
-    email: 'amita@credenceasialtd.com',
-  },
-  {
-    name: 'Shashi Ranjan',
-    role: 'Director',
-    phone: '+852 9285 4595',
-    phoneHref: '+85292854595',
-    email: 'shashi@credenceasialtd.com',
-  },
-]
-
 const OFFICE_ADDRESS = 'Unit 608, 8/F, Hope Sea Industrial Centre\n26 Lam Hing Street, Kowloon Bay\nKowloon, Hong Kong'
 const OFFICE_PHONE   = '+852 2650 0058'
 const OFFICE_PHONE_HREF = '+85226500058'
 
-// Hard-coded query string for the embedded map. Avoids API key requirement.
 const MAP_QUERY = encodeURIComponent('Hope Sea Industrial Centre, 26 Lam Hing Street, Kowloon Bay, Hong Kong')
 const MAP_EMBED = `https://maps.google.com/maps?q=${MAP_QUERY}&t=&z=15&ie=UTF8&iwloc=&output=embed`
 const MAP_LINK  = `https://maps.google.com/?q=${MAP_QUERY}`
@@ -74,47 +56,6 @@ export default async function ContactPage() {
         </div>
       </section>
 
-      {/* Two-column contact cards, named contacts */}
-      <section className="bg-ivory py-20">
-        <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <p className="type-eyebrow mb-8 text-clay">
-            Direct contacts
-          </p>
-          <div className="grid grid-cols-1 gap-px bg-beige/40 md:grid-cols-2">
-            {CONTACTS.map((c, i) => (
-              <AnimateIn key={c.email} delay={i * 0.1} className="h-full">
-              <article className="flex h-full flex-col gap-4 bg-ivory p-8 md:p-10">
-                <div>
-                  <h2 className="type-h3 text-charcoal">
-                    {c.name}
-                  </h2>
-                  <p className="type-eyebrow mt-1 text-clay">
-                    {c.role}
-                  </p>
-                </div>
-                <div className="mt-4 flex flex-col gap-3 type-small text-charcoal/80">
-                  <a
-                    href={`tel:${c.phoneHref}`}
-                    className="inline-flex items-center gap-3 transition-colors hover:text-soil"
-                  >
-                    <span className="type-eyebrow text-clay">Phone</span>
-                    {c.phone}
-                  </a>
-                  <a
-                    href={`mailto:${c.email}`}
-                    className="inline-flex items-center gap-3 transition-colors hover:text-soil"
-                  >
-                    <span className="type-eyebrow text-clay">Email</span>
-                    {c.email}
-                  </a>
-                </div>
-              </article>
-              </AnimateIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Enquiry form + map */}
       <section className="bg-cream py-24 md:py-36">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-6 md:grid-cols-[5fr_6fr] md:gap-20 md:px-10">
@@ -129,6 +70,33 @@ export default async function ContactPage() {
           </div>
 
           <div className="flex flex-col gap-8">
+            {/* Contact info — no names */}
+            <AnimateIn>
+              <div className="border-l-2 border-clay/30 pl-6 flex flex-col gap-4">
+                <p className="type-eyebrow text-clay">Get in touch</p>
+                <a
+                  href="mailto:contact@credenceasialtd.com"
+                  className="type-small text-charcoal/80 transition-colors hover:text-soil"
+                >
+                  contact@credenceasialtd.com
+                </a>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href="tel:+85261005224"
+                    className="type-small text-charcoal/80 transition-colors hover:text-soil"
+                  >
+                    +852 6100 5224
+                  </a>
+                  <a
+                    href="tel:+85292854595"
+                    className="type-small text-charcoal/80 transition-colors hover:text-soil"
+                  >
+                    +852 9285 4595
+                  </a>
+                </div>
+              </div>
+            </AnimateIn>
+
             {/* Office locations */}
             <div className="grid grid-cols-1 gap-px bg-beige/40 sm:grid-cols-2">
               <div className="bg-cream p-6">
@@ -174,7 +142,6 @@ export default async function ContactPage() {
             >
               Open in Google Maps
             </a>
-
           </div>
         </div>
       </section>

@@ -38,6 +38,12 @@ export default function AboutMediaGallery() {
             aspectRatio="1/1"
             sizes={SMALL_SIZES}
           />
+          <GalleryImage
+            src="/assets/office/img98.jpg"
+            alt="Large-scale garment sewing floor with rows of production workers at industrial machines"
+            aspectRatio="4/3"
+            sizes={SMALL_SIZES}
+          />
         </div>
         <div className="flex flex-col gap-3 pt-8">
           <GalleryImage
@@ -55,6 +61,12 @@ export default function AboutMediaGallery() {
           <GalleryImage
             src="/assets/office/page016_204_0.jpeg"
             alt="Active apparel sewing floor with production teams and machinery"
+            aspectRatio="4/3"
+            sizes={SMALL_SIZES}
+          />
+          <GalleryImage
+            src="/assets/office/img99.jpg"
+            alt="Garment quality control station with measurement check and folding inspection team"
             aspectRatio="4/3"
             sizes={SMALL_SIZES}
           />
@@ -76,6 +88,12 @@ export default function AboutMediaGallery() {
           <GalleryImage
             src="/assets/office/page014_191_0.jpeg"
             alt="Technical apparel team working at computer workstations"
+            aspectRatio="4/3"
+            sizes={SMALL_SIZES}
+          />
+          <GalleryImage
+            src="/assets/office/img98.jpg"
+            alt="Large-scale garment sewing floor with rows of production workers at industrial machines"
             aspectRatio="4/3"
             sizes={SMALL_SIZES}
           />
@@ -107,6 +125,12 @@ export default function AboutMediaGallery() {
           <GalleryImage
             src="/assets/office/page016_204_0.jpeg"
             alt="Active apparel sewing floor with production teams and machinery"
+            aspectRatio="4/3"
+            sizes={SMALL_SIZES}
+          />
+          <GalleryImage
+            src="/assets/office/img99.jpg"
+            alt="Garment quality control station with measurement check and folding inspection team"
             aspectRatio="4/3"
             sizes={SMALL_SIZES}
           />
