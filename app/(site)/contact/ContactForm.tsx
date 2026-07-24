@@ -25,7 +25,8 @@ export default function ContactForm() {
       `Name: ${name}\nCompany: ${company}\nEmail: ${email}\nPhone: ${phone}\n\nMessage:\n${message}`,
     )
 
-    window.location.href = `mailto:contact@credenceasialtd.com?subject=Sourcing%20Enquiry%20from%20${encodeURIComponent(name)}&body=${body}`
+    const subject = encodeURIComponent(`[Website Enquiry] Sourcing enquiry from ${name}${company ? ` – ${company}` : ''}`)
+    window.location.href = `mailto:contact@credenceasialtd.com?subject=${subject}&body=${body}`
 
     setLoading(false)
     setSubmitted(true)
