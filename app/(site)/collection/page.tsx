@@ -2,14 +2,13 @@ import type {Metadata} from 'next'
 import Link from 'next/link'
 import {client} from '@/sanity/lib/client'
 import SmartImage from '@/components/shared/SmartImage'
-import ImagePlaceholder from '@/components/shared/ImagePlaceholder'
 import AnimateIn from '@/components/shared/AnimateIn'
 import {ArrowRight} from 'lucide-react'
 
 export const revalidate = 60
 
 const PRODUCTS_QUERY = `*[_type == "product"] | order(order asc, name asc){
-  _id, name, title, category, description, capabilityLine, capabilities, image
+  _id, name, title, category, image
 }`
 
 export const metadata: Metadata = {
@@ -18,48 +17,17 @@ export const metadata: Metadata = {
     'Women, Men and Kids collections. Tops and Bottoms in Woven, Knits and Denim. Outerwear including seam-sealed, fleece, soft shell, complex washes and garment dye.',
 }
 
-const PRODUCT_TYPES = [
-  {
-    name: 'Outerwear',
-    detail: 'Seam-sealed shells, fleece, soft-shell, technical jackets.',
-    countries: ['China', 'Bangladesh'],
-  },
-  {
-    name: 'Knits',
-    detail: 'Tops, bottoms, sweats and base layers across weights.',
-    countries: ['Bangladesh', 'India'],
-  },
-  {
-    name: 'Woven',
-    detail: 'Shirts, blouses, bottoms, dresses.',
-    countries: ['Bangladesh', 'Vietnam', 'India'],
-  },
-  {
-    name: 'Denim',
-    detail: 'Five-pocket and beyond. Garment-dyed, rinsed and finished.',
-    countries: ['Bangladesh', 'Vietnam'],
-  },
-  {
-    name: 'Activewear',
-    detail: 'Performance bottoms, tops and coordinates.',
-    countries: ['India'],
-  },
-  {
-    name: 'Workwear',
-    detail: 'Heavy-duty cotton and blends, reinforced construction.',
-    countries: ['China'],
-  },
-  {
-    name: 'Casualwear',
-    detail: 'Woven shirts, chinos and casualwear programmes.',
-    countries: ['China', 'Bangladesh', 'Cambodia', 'Vietnam'],
-  },
-  {
-    name: 'Beachwear',
-    detail: 'Beach wears, cover-ups and coordinates.',
-    countries: ['India'],
-  },
+const CATEGORIES = [
+  'Outerwear',
+  'Knits',
+  'Woven',
+  'Denim',
+  'Activewear',
+  'Workwear',
+  'Casualwear',
+  'Beachwear',
 ]
+
 
 type Product = {
   _id: string
@@ -67,8 +35,6 @@ type Product = {
   title?: string
   category?: string
   image?: any
-  capabilityLine?: string
-  capabilities?: string[]
 }
 
 export default async function CollectionPage() {
@@ -77,127 +43,100 @@ export default async function CollectionPage() {
   return (
     <main className="min-h-screen bg-ivory pt-[68px]">
 
-      {/* ── Slim page header ── */}
-      <div className="border-b border-beige/70 px-6 py-7 md:px-10">
-        <div className="mx-auto flex max-w-7xl items-end justify-between gap-6">
-          <div>
-            <p className="type-eyebrow mb-1.5 text-clay">
-              Credence Asia Group
-            </p>
-            <h1 className="type-h2 text-charcoal">
-              Collection
-            </h1>
+      {/* ── Page header ──────────────────────────────────────────── */}
+      <header className="border-b border-beige px-6 pb-8 pt-10 md:px-12 md:pt-14">
+        <div className="mx-auto max-w-[1400px]">
+          <div className="flex items-end justify-between gap-8">
+
+            <div>
+              <p className="type-eyebrow mb-2 text-clay">Credence Asia Group</p>
+              <h1 className="font-serif text-[2.4rem] font-normal leading-none tracking-tight text-charcoal md:text-[3.2rem]">
+                Collection
+              </h1>
+            </div>
+
+            {/* Gender range — tells scope without a label */}
+            <div className="hidden flex-col items-end gap-0 md:flex">
+              {['Women', 'Men', 'Kids'].map((g) => (
+                <span
+                  key={g}
+                  className="font-serif text-[1.05rem] font-light leading-[1.55] text-charcoal/40"
+                >
+                  {g}
+                </span>
+              ))}
+            </div>
+
           </div>
-          <p className="hidden text-right type-small text-charcoal/55 md:block md:max-w-[38ch]">
-            Women, Men &amp; Kids: woven, knits, denim and outerwear.
-          </p>
+        </div>
+      </header>
+
+      {/* ── Category marquee ─────────────────────────────────────── */}
+      {/* 4 passes × content width → always fills any viewport.
+          Animation translates by -25% (= exactly one pass) for a seamless loop. */}
+      <div
+        className="overflow-hidden border-b border-beige bg-cream/40 py-[11px]"
+        aria-label="Categories: Outerwear, Knits, Woven, Denim, Activewear, Workwear, Casualwear, Beachwear"
+      >
+        <div className="animate-marquee-4x">
+          {Array.from({length: 4}, (_, pass) =>
+            CATEGORIES.map((cat) => (
+              <span
+                key={`${pass}-${cat}`}
+                className="inline-flex flex-shrink-0 items-center"
+                aria-hidden={pass > 0 ? true : undefined}
+              >
+                <span className="px-7 font-sans text-[11px] font-normal uppercase tracking-[0.28em] text-charcoal/45">
+                  {cat}
+                </span>
+                <span className="h-[14px] w-px flex-shrink-0 bg-beige" aria-hidden="true" />
+              </span>
+            ))
+          )}
         </div>
       </div>
 
-      {/* ── Products grid ── */}
-      <section className="py-10 md:py-14">
-        <div className="mx-auto max-w-7xl px-6 md:px-10">
+      {/* ── Masonry product grid ──────────────────────────────────── */}
+      <section className="px-4 py-10 md:px-6 md:py-14">
 
-          {/* Sanity products (if any) */}
-          {products.length > 0 && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              {products.map((p, i) => (
-                <AnimateIn key={p._id} delay={(i % 5) * 0.06} y={22} className="h-full">
-                <article
-                  className="pp-card group flex h-full flex-col overflow-hidden border border-beige bg-white"
-                >
-                  <div className="aspect-[3/4] overflow-hidden">
-                    <SmartImage
-                      source={p.image}
-                      ratio="3/4"
-                      tone="light"
-                      label={p.title || p.name}
-                      alt={p.title || p.name || ''}
-                      width={600}
-                      className="h-full w-full transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5 p-4">
-                    {p.category && (
-                      <p className="type-eyebrow text-clay">
-                        {p.category}
-                      </p>
-                    )}
-                    <h3 className="font-serif text-[15px] font-normal leading-snug text-charcoal">
-                      {p.title || p.name}
-                    </h3>
-                    {p.capabilities && p.capabilities.length > 0 && (
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {p.capabilities.map((c) => (
-                          <span
-                            key={c}
-                            className="border border-beige px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-clay"
-                          >
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </article>
-                </AnimateIn>
-              ))}
-            </div>
-          )}
-
-          {/* Product type categories — always shown */}
-          {products.length > 0 && (
-            <h2 className="mb-6 mt-14 font-serif text-[1.1rem] font-normal text-charcoal/60">
-              By category
-            </h2>
-          )}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {PRODUCT_TYPES.map((t, i) => (
-              <AnimateIn key={t.name} delay={(i % 4) * 0.07} y={22} className="h-full">
-                <article
-                  className="pp-card group flex h-full flex-col overflow-hidden border border-beige bg-white"
-                >
-                  <div className="aspect-[3/4] overflow-hidden">
-                    <ImagePlaceholder
-                      ratio="3/4"
-                      tone="light"
-                      label={t.name}
-                      className="h-full w-full"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2 p-4">
-                    <h3 className="font-serif text-[16px] font-normal text-charcoal">
-                      {t.name}
-                    </h3>
-                    <p className="type-small text-charcoal/60">
-                      {t.detail}
-                    </p>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {t.countries.map((c) => (
-                        <span
-                          key={c}
-                          className="border border-beige/80 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-clay"
-                        >
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </article>
+        {products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-36 text-center">
+            <div className="mb-5 h-px w-8 bg-beige" />
+            <p className="type-eyebrow text-charcoal/30">No products yet</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {products.map((p, i) => (
+              <AnimateIn key={p._id} delay={(i % 5) * 0.04} y={16}>
+                <div className="group relative overflow-hidden">
+                  <SmartImage
+                    source={p.image}
+                    ratio="3/4"
+                    tone="light"
+                    alt=""
+                    width={700}
+                    className="w-full"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 bg-charcoal/0 transition-colors duration-500 group-hover:bg-charcoal/[0.06]"
+                    aria-hidden="true"
+                  />
+                </div>
               </AnimateIn>
             ))}
           </div>
-        </div>
+        )}
+
       </section>
 
-      {/* ── Simple CTA strip ── */}
-      <section className="border-t border-beige/60 bg-cream py-14">
-        <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 px-6 md:flex-row md:items-center md:justify-between md:px-10">
+      {/* ── CTA ──────────────────────────────────────────────────── */}
+      <section className="border-t border-beige/70 bg-cream py-14 md:py-16">
+        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-6 px-6 md:flex-row md:items-center md:justify-between md:px-12">
           <div>
-            <h2 className="font-serif text-[1.55rem] font-normal text-charcoal md:text-[1.8rem]">
+            <h2 className="font-serif text-[1.6rem] font-normal text-charcoal md:text-[1.9rem]">
               Brief us on your category.
             </h2>
-            <p className="mt-1.5 type-small text-charcoal/60">
+            <p className="mt-1.5 type-small text-charcoal/55">
               Share your programme and we'll match it to the right country and factory.
             </p>
           </div>

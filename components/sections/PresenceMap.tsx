@@ -232,66 +232,69 @@ export default function PresenceMap() {
 
   // GSAP scroll-triggered animation. Runs after hydration so the marker
   // positions in the DOM match the projected coordinates (no pop-from-origin).
+  // All five animation groups are merged into one timeline with a single
+  // ScrollTrigger so they don't all fire independently at the same scroll
+  // position and spike the frame budget.
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const ctx = gsap.context(() => {
-      const st = { trigger: containerRef.current, start: 'top 75%', once: true }
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 75%',
+          once: true,
+        },
+      })
 
       // 1. Land: fade in with a whisper of scale
-      gsap.from('.pm-land, .pm-highlight', {
+      tl.from('.pm-land, .pm-highlight', {
         opacity: 0,
         scale: 0.985,
         transformOrigin: '50% 50%',
         duration: 1.4,
         ease: 'power2.inOut',
-        scrollTrigger: st,
-      })
+      }, 0)
 
       // 2. Core dots pop after land settles
-      gsap.from('.pm-dot', {
+      tl.from('.pm-dot', {
         scale: 0,
         opacity: 0,
         transformOrigin: '0px 0px',
         duration: 0.5,
         ease: 'back.out(1.7)',
         stagger: 0.1,
-        delay: 0.85,
-        scrollTrigger: st,
-      })
+      }, 0.85)
 
       // 3. Halo rings expand (0.6 → 1)
-      gsap.from('.pm-halo', {
+      tl.from('.pm-halo', {
         scale: 0.6,
         opacity: 0,
         transformOrigin: '0px 0px',
         duration: 0.5,
         ease: 'power2.out',
         stagger: 0.1,
-        delay: 0.9,
-        scrollTrigger: st,
-      })
+      }, 0.9)
 
       // 4. Leader lines fade in with their dot
-      gsap.from('.pm-leader', {
+      tl.from('.pm-leader', {
         opacity: 0,
         duration: 0.3,
         stagger: 0.1,
-        delay: 0.9,
-        scrollTrigger: st,
-      })
+      }, 0.9)
 
       // 5. Labels fade up
-      gsap.from('.pm-label', {
+      tl.from('.pm-label', {
         y: 6,
         opacity: 0,
         duration: 0.35,
         ease: 'power2.out',
         stagger: 0.1,
-        delay: 0.95,
-        scrollTrigger: st,
-      })
+      }, 0.95)
     }, containerRef)
+
+    // Refresh positions after isMobile flip so triggers are correct
+    ScrollTrigger.refresh()
 
     return () => ctx.revert()
   }, [isMobile])
@@ -301,7 +304,7 @@ export default function PresenceMap() {
   const landMaskId = 'pm-land-mask'
 
   return (
-    <div ref={containerRef} className="mx-auto max-w-[960px] text-charcoal">
+    <div ref={containerRef} className="mx-auto max-w-[960px] text-charcoal" style={{ touchAction: 'pan-y' }}>
       {/* Mobile-only text note surfacing Copenhagen off-map */}
       {isMobile && (
         <p className="mx-auto mb-3 max-w-[22rem] px-4 text-center type-eyebrow text-clay/80">
@@ -316,6 +319,7 @@ export default function PresenceMap() {
           aria-label="Map showing Credence Asia production presence from Europe through Southeast Asia"
           role="img"
           className="h-full w-full"
+          style={{ pointerEvents: 'none' }}
         >
           <defs>
             {/* Crop at the padded viewBox edge without drawing artificial border lines. */}
