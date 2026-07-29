@@ -77,12 +77,22 @@ export default function AboutHero({ title, introText }: AboutHeroProps) {
         className="absolute will-change-transform"
         style={{ inset: '-10% 0' }}
       >
+        {/* Mobile portrait (9:16) */}
+        <Image
+          src="/about-hero-bg-mobile.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center block md:hidden"
+          sizes="100vw"
+        />
+        {/* Desktop landscape */}
         <Image
           src="/about-hero-bg.png"
           alt=""
           fill
           priority
-          className="object-cover object-center"
+          className="object-cover object-center hidden md:block"
           sizes="100vw"
         />
       </div>
