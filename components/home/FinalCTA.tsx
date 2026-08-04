@@ -84,7 +84,7 @@ export default function FinalCTA({ctaText}: Props) {
         <div className="fcta-img-wrap relative h-72 overflow-hidden sm:h-96 xl:h-full">
           <div className="fcta-img-inner relative h-full">
             <Image
-              src="/contact.png"
+              src="/contact1.png"
               alt="Credence Asia contact"
               fill
               className="object-cover object-center"

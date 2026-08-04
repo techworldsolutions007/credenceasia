@@ -23,13 +23,6 @@ export const sustainabilityPage = defineType({
         fields: [
           {name: 'sectionTitle', title: 'Section Title', type: 'string'},
           {name: 'sectionText', title: 'Section Text', type: 'text', rows: 4},
-          {
-            name: 'sectionImage',
-            title: 'Sustainability Section — Supporting Image',
-            description: 'Optional image to accompany this section. Shown alongside the section text. Recommended: landscape or portrait format.',
-            type: 'image',
-            options: {hotspot: true},
-          },
         ],
         preview: {select: {title: 'sectionTitle'}},
       }],

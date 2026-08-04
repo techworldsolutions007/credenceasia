@@ -10,17 +10,16 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
 
 export const homePageQuery = `*[_type == "homePage"][0]{
   title,
-  heroEyebrow, heroTitle, heroText, heroImage,
+  heroEyebrow, heroTitle, heroText,
   heroPrimaryButtonText, heroPrimaryButtonLink,
   heroSecondaryButtonText, heroSecondaryButtonLink,
-  aboutTitle, aboutText, aboutImage, aboutPoints, sectionBreakImage,
+  aboutTitle, aboutText, aboutPoints,
   productionTitle, productionText,
   journeyStages[]{
     _key,
     label,
     stat,
     statLabel,
-    image,
     variant
   },
   sustainabilityTitle, sustainabilityText,
@@ -48,19 +47,19 @@ export const featuredSustainabilityItemsQuery = `*[_type == "sustainabilityItem"
 }`
 
 export const contactPageQuery = `*[_type == "contactPage"][0]{
-  title, introText, image, email, phone, address
+  title, introText, email, phone, address
 }`
 
 export const aboutPageQuery = `*[_type == "aboutPage"][0]{
-  title, introText, heroImage,
+  title, introText,
   whoTitle, whoText,
   whatTitle, whatText,
-  image, ctaTitle, ctaText
+  ctaTitle, ctaText
 }`
 
 export const sustainabilityPageQuery = `*[_type == "sustainabilityPage"][0]{
   title, introText, heroImage,
-  sections[]{ sectionTitle, sectionText, sectionImage },
+  sections[]{ sectionTitle, sectionText },
   ctaTitle, ctaText
 }`
 

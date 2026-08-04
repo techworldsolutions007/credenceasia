@@ -34,15 +34,6 @@ export const homePage = defineType({
         'From first sketch to final delivery through one accountable pathway, with commercial presence across Europe and the Americas.',
     }),
     defineField({
-      name: 'heroImage',
-      title: 'Hero image (right side)',
-      description:
-        'Large image displayed on the right side of the homepage hero. Portrait orientation (3:4) works best. Use a production floor, atelier or product shot.',
-      type: 'image',
-      options: {hotspot: true},
-    }),
-
-    defineField({
       name: 'heroPrimaryButtonText',
       title: 'Hero Primary Button Text',
       type: 'string',
@@ -83,28 +74,10 @@ export const homePage = defineType({
         'Founded in 2016 in Hong Kong, Credence Asia Group links European and American design and market knowledge with disciplined Asian manufacturing.',
     }),
     defineField({
-      name: 'aboutImage',
-      title: 'Who We Are section image',
-      description:
-        'Image displayed on the right side of the Who We Are section. Portrait 4:5 ratio works best. Design studio, sample room, or team shot.',
-      type: 'image',
-      options: {hotspot: true},
-    }),
-    defineField({
       name: 'aboutPoints',
       title: 'About Highlight Points',
       type: 'array',
       of: [{type: 'string'}],
-    }),
-
-    // Section break
-    defineField({
-      name: 'sectionBreakImage',
-      title: 'Section Break Image',
-      description:
-        'Full-bleed image rendered between the About and Network sections. Landscape orientation. Factory floor or atelier shot works well.',
-      type: 'image',
-      options: {hotspot: true},
     }),
 
     // Production
@@ -160,13 +133,6 @@ export const homePage = defineType({
               validation: (Rule) => Rule.required(),
             }),
             defineField({
-              name: 'image',
-              title: 'Stage Photo',
-              description: 'Production floor photo. Landscape orientation works best.',
-              type: 'image',
-              options: {hotspot: true},
-            }),
-            defineField({
               name: 'variant',
               title: 'Panel Variant',
               description:
@@ -184,12 +150,11 @@ export const homePage = defineType({
             }),
           ],
           preview: {
-            select: {title: 'label', subtitle: 'stat', media: 'image'},
-            prepare({title, subtitle, media}) {
+            select: {title: 'label', subtitle: 'stat'},
+            prepare({title, subtitle}) {
               return {
                 title: title || 'Untitled stage',
                 subtitle: subtitle ? `Stat: ${subtitle}` : undefined,
-                media,
               }
             },
           },

@@ -21,13 +21,6 @@ export const product = defineType({
       options: {hotspot: true},
     }),
     defineField({
-      name: 'gallery',
-      title: 'Product Gallery — Additional Images (optional)',
-      description: 'Extra photos for this product. Can include detail shots, alternate angles, or fabric close-ups.',
-      type: 'array',
-      of: [{type: 'image', options: {hotspot: true}}],
-    }),
-    defineField({
       name: 'title',
       title: 'Garment Title',
       description: 'Descriptive label shown on the tile, e.g. "Garment-dyed cotton overshirt". Falls back to Product Name if left blank.',

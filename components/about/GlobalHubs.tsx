@@ -24,26 +24,26 @@ const HUBS = [
       'Brand-specific range planning',
       'Commercial product thinking',
     ],
-    image: '/hero-atelier.png',
-    imageAlt: 'Product-development workspace with material research, fabric swatches, and colour references',
+    image: '/assets/copenhagen-runway.png',
+    imageAlt: 'Copenhagen Fashion Week runway show — Scandinavian minimalist venue with models in structured Nordic apparel',
   },
   {
-    id: 'hkg',
-    city: 'Hong Kong',
-    country: 'China SAR',
-    role: 'Operational Hub',
+    id: 'nyc',
+    city: 'New York',
+    country: 'United States',
+    role: 'Market & Commercial Hub',
     accentClass: 'text-leaf',
     borderClass: 'border-charcoal/15',
     dotClass: 'bg-leaf',
     responsibilities: [
-      'Sourcing strategy and vendor coordination',
-      'Production scheduling and management',
-      'Quality oversight across all facilities',
-      'Freight planning and logistics',
-      'Client and brand relationship management',
+      'US and Americas brand partnerships',
+      'Commercial strategy and client development',
+      'Consumer trend and retail channel intelligence',
+      'Wholesale and go-to-market coordination',
+      'Product commercial direction for the Americas',
     ],
-    image: '/assets/office/page016_203_0.jpeg',
-    imageAlt: 'Sourcing and production coordination environment with fabric references and technical documentation',
+    image: '/assets/nyc_runaway1.png',
+    imageAlt: 'New York fashion runway — editorial scene reflecting Americas market intelligence and brand direction',
   },
 ] as const
 
@@ -87,7 +87,7 @@ export default function GlobalHubs() {
 
         {/* ── Section intro ─────────────────────────────────────────── */}
         <AnimateIn className="mb-14 max-w-2xl">
-          <p className="type-eyebrow mb-4 text-olive">Design and coordination</p>
+          <p className="type-eyebrow mb-4 text-olive">Creative geography</p>
           <h2
             id="hubs-heading"
             className="text-charcoal"
@@ -98,13 +98,14 @@ export default function GlobalHubs() {
               letterSpacing: '-0.025em',
             }}
           >
-            <span className="font-light text-charcoal/45">Two hubs.</span>{' '}
-            <strong className="font-semibold">One standard.</strong>
+            <span className="font-light text-charcoal/45">Designed with intent.</span>{' '}
+            <strong className="font-semibold">Delivered with precision.</strong>
           </h2>
           <p className="mt-5 max-w-[52ch] type-body text-charcoal/65">
-            Copenhagen brings fashion intelligence and market perspective. Hong Kong
-            brings sourcing depth and production precision. Together, they form one
-            accountable pathway from brief to delivery.
+            Every collection begins with creative clarity and ends with commercial
+            precision. Design intelligence sets the tone, defining colour, silhouette
+            and material story. Market depth then translates that vision into product
+            that connects with consumers. Two disciplines, one cohesive output.
           </p>
         </AnimateIn>
 
@@ -120,7 +121,7 @@ export default function GlobalHubs() {
               }}
             />
           </div>
-          <span className="shrink-0 type-eyebrow text-charcoal/50">Hong Kong</span>
+          <span className="shrink-0 type-eyebrow text-charcoal/50">New York</span>
         </div>
 
         {/* ── Hub columns ───────────────────────────────────────────── */}
