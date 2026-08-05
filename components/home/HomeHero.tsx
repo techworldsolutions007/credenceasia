@@ -216,7 +216,7 @@ const NAV_LINKS = [
 // object-cover would otherwise crop the landscape frame to an empty centre strip.
 const SLIDES = [
   {src: '/hero-atelier.png',       mobileSrc: '/hero-atelier-mobile.png',       alt: 'Design atelier, Copenhagen'},
-  {src: '/hero2.png',              mobileSrc: '/hero2-mobile.png',              alt: 'Production, Asia'},
+  {src: '/herostudio.png',              mobileSrc: '/herostudio_mobile.png',              alt: 'Production, Asia'},
   {src: '/hero3sus1.png',          mobileSrc: '/hero3sus1-mobile.png',          alt: 'Product capabilities'},
   {src: '/sustainable-fibers.png', mobileSrc: '/sustainable-fibers-mobile.png', alt: 'Sustainable fibers'},
 ]

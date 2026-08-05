@@ -24,18 +24,26 @@ const WM: Pick<Partner, 'shape' | 'intrinsic'> = {
   intrinsic: {w: 320, h: 80},
 }
 
-// ─── 10 approved logos (all 320 × 80 wordmarks) ──────────────────────────────
+// ─── 18 approved logos from /assets/logos/customers/2 ───────────────────────
 export const PARTNERS: Partner[] = [
-  {name: 'CLAAS',                src: '/assets/logos/customers/11.png', ...WM},
-  {name: 'STIHL',                src: '/assets/logos/customers/12.png', ...WM},
-  {name: 'MUFTI',                src: '/assets/logos/customers/13.png', ...WM},
-  {name: 'Volkswagen',           src: '/assets/logos/customers/14.png', ...WM},
-  {name: 'Five Seasons',         src: '/assets/logos/customers/15.png', ...WM},
-  {name: 'BALILAB',              src: '/assets/logos/customers/16.png', ...WM},
-  {name: 'World Wide Sportsman', src: '/assets/logos/customers/17.png', ...WM},
-  {name: 'Superdry',             src: '/assets/logos/customers/18.png', ...WM},
-  {name: 'Läderach',             src: '/assets/logos/customers/19.png', ...WM},
-  {name: 'MASCOT',               src: '/assets/logos/customers/20.png', ...WM},
+  {name: 'Partner Brand 1',  src: '/assets/logos/customers/2/1.png', ...WM},
+  {name: 'Partner Brand 2',  src: '/assets/logos/customers/2/2.png', ...WM},
+  {name: 'Partner Brand 3',  src: '/assets/logos/customers/2/3.png', ...WM},
+  {name: 'Partner Brand 4',  src: '/assets/logos/customers/2/4.png', ...WM},
+  {name: 'Partner Brand 5',  src: '/assets/logos/customers/2/5.png', ...WM},
+  {name: 'Partner Brand 6',  src: '/assets/logos/customers/2/6.png', ...WM},
+  {name: 'Partner Brand 7',  src: '/assets/logos/customers/2/7.png', ...WM},
+  {name: 'Partner Brand 8',  src: '/assets/logos/customers/2/8.png', ...WM},
+  {name: 'Partner Brand 9',  src: '/assets/logos/customers/2/9.png', ...WM},
+  {name: 'Partner Brand 10', src: '/assets/logos/customers/2/10.png', ...WM},
+  {name: 'Partner Brand 11', src: '/assets/logos/customers/2/11.png', ...WM},
+  {name: 'Partner Brand 12', src: '/assets/logos/customers/2/12.png', ...WM},
+  {name: 'Partner Brand 13', src: '/assets/logos/customers/2/13.png', ...WM},
+  {name: 'Partner Brand 14', src: '/assets/logos/customers/2/14.png', ...WM},
+  {name: 'Partner Brand 15', src: '/assets/logos/customers/2/15.png', ...WM},
+  {name: 'Partner Brand 16', src: '/assets/logos/customers/2/16.png', ...WM},
+  {name: 'Partner Brand 17', src: '/assets/logos/customers/2/17.png', ...WM},
+  {name: 'Partner Brand 18', src: '/assets/logos/customers/2/18.png', ...WM},
 ]
 
 /** Grid shows fallback text instead of an empty/sparse grid below this count */
