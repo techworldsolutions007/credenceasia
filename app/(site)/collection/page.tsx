@@ -1,15 +1,48 @@
 import type {Metadata} from 'next'
-import Link from 'next/link'
 import {client} from '@/sanity/lib/client'
-import SmartImage from '@/components/shared/SmartImage'
-import AnimateIn from '@/components/shared/AnimateIn'
-import {ArrowRight} from 'lucide-react'
+import CollectionView from '@/components/collection/CollectionView'
 
 export const revalidate = 60
 
-const PRODUCTS_QUERY = `*[_type == "product"] | order(order asc, name asc){
-  _id, name, title, category, image
-}`
+/* Fetch every product that has an image asset */
+const PRODUCTS_QUERY = `
+  *[_type == "product" && defined(image.asset)] | order(order asc, name asc) {
+    _id,
+    category,
+    "aspect": image.asset->metadata.dimensions.aspectRatio,
+    "lqip":   image.asset->metadata.lqip,
+    image
+  }
+`
+
+/* Fetch productCategory docs for ordering, headings, slugs, and backgrounds */
+const CATEGORIES_QUERY = `
+  *[_type == "productCategory"] | order(order asc) {
+    "name":       name,
+    "heading":    coalesce(sectionHeading, name),
+    "slug":       slug.current,
+    "background": coalesce(background, "ivory"),
+    "order":      coalesce(order, 9999)
+  }
+`
+
+type RawProduct = {
+  _id: string
+  category: string | null
+  aspect: number | null
+  lqip: string | null
+  image: unknown
+}
+
+type CategorySetting = {
+  name: string | null
+  heading: string | null
+  slug: string | null
+  background: string
+  order: number
+}
+
+const BG_CYCLE = ['ivory', 'cream', 'celadon', 'mist'] as const
 
 export const metadata: Metadata = {
   title: 'Collection | Credence Asia Group',
@@ -17,139 +50,73 @@ export const metadata: Metadata = {
     'Women, Men and Kids collections. Tops and Bottoms in Woven, Knits and Denim. Outerwear including seam-sealed, fleece, soft shell, complex washes and garment dye.',
 }
 
-const CATEGORIES = [
-  'Outerwear',
-  'Knits',
-  'Woven',
-  'Denim',
-  'Activewear',
-  'Workwear',
-  'Casualwear',
-  'Beachwear',
-]
-
-
-type Product = {
-  _id: string
-  name?: string
-  title?: string
-  category?: string
-  image?: any
-}
-
 export default async function CollectionPage() {
-  const products: Product[] = await client.fetch(PRODUCTS_QUERY).catch(() => [])
+  const [products, catSettings] = await Promise.all([
+    client
+      .fetch<RawProduct[]>(PRODUCTS_QUERY, {}, {next: {revalidate: 60}})
+      .catch(() => [] as RawProduct[]),
+    client
+      .fetch<CategorySetting[]>(CATEGORIES_QUERY, {}, {next: {revalidate: 60}})
+      .catch(() => [] as CategorySetting[]),
+  ])
 
-  return (
-    <main className="min-h-screen bg-ivory pt-[68px]">
+  /* Group products by their category string (case-insensitive key) */
+  const productsByKey = new Map<string, RawProduct[]>()
+  const uncategorized: RawProduct[] = []
+  for (const p of products) {
+    if (!p.category) { uncategorized.push(p); continue }
+    const key = p.category.toLowerCase()
+    if (!productsByKey.has(key)) productsByKey.set(key, [])
+    productsByKey.get(key)!.push(p)
+  }
 
-      {/* ── Page header ──────────────────────────────────────────── */}
-      <header className="border-b border-beige px-6 pb-8 pt-10 md:px-12 md:pt-14">
-        <div className="mx-auto max-w-[1400px]">
-          <div className="flex items-end justify-between gap-8">
+  /* Track which keys have been claimed by a productCategory doc */
+  const claimed = new Set<string>()
 
-            <div>
-              <p className="type-eyebrow mb-2 text-clay">Credence Asia Group</p>
-              <h1 className="font-serif text-[2.4rem] font-normal leading-none tracking-tight text-charcoal md:text-[3.2rem]">
-                Collection
-              </h1>
-            </div>
+  /* Build the primary category list from productCategory docs (preserves CMS order) */
+  const primary = catSettings
+    .filter((s) => s.name)
+    .map((s, idx) => {
+      const key = s.name!.toLowerCase()
+      claimed.add(key)
+      return {
+        _id: s.name!,
+        title: s.heading ?? s.name!,
+        slug: s.slug ?? key.replace(/\s+/g, '-'),
+        background: s.background,
+        products: productsByKey.get(key) ?? [],
+        _order: s.order ?? idx,
+      }
+    })
+    .sort((a, b) => a._order - b._order)
 
-            {/* Gender range — tells scope without a label */}
-            <div className="hidden flex-col items-end gap-0 md:flex">
-              {['Women', 'Men', 'Kids'].map((g) => (
-                <span
-                  key={g}
-                  className="font-serif text-[1.05rem] font-light leading-[1.55] text-charcoal/40"
-                >
-                  {g}
-                </span>
-              ))}
-            </div>
+  /* Append products whose category string has no matching productCategory doc */
+  const extras = Array.from(productsByKey.entries())
+    .filter(([key]) => !claimed.has(key))
+    .map(([key, prods], idx) => ({
+      _id: key,
+      title: key.charAt(0).toUpperCase() + key.slice(1),
+      slug: key.replace(/\s+/g, '-'),
+      background: BG_CYCLE[(primary.length + idx) % BG_CYCLE.length],
+      products: prods,
+      _order: 9999 + idx,
+    }))
 
-          </div>
-        </div>
-      </header>
+  /* Strip internal _order and drop empty categories */
+  const categories = [...primary, ...extras]
+    .filter((cat) => cat.products.length > 0)
+    .map(({_order, ...cat}) => cat)
 
-      {/* ── Category marquee ─────────────────────────────────────── */}
-      {/* 4 passes × content width → always fills any viewport.
-          Animation translates by -25% (= exactly one pass) for a seamless loop. */}
-      <div
-        className="overflow-hidden border-b border-beige bg-cream/40 py-[11px]"
-        aria-label="Categories: Outerwear, Knits, Woven, Denim, Activewear, Workwear, Casualwear, Beachwear"
-      >
-        <div className="animate-marquee-4x">
-          {Array.from({length: 4}, (_, pass) =>
-            CATEGORIES.map((cat) => (
-              <span
-                key={`${pass}-${cat}`}
-                className="inline-flex flex-shrink-0 items-center"
-                aria-hidden={pass > 0 ? true : undefined}
-              >
-                <span className="px-7 font-sans text-[11px] font-normal uppercase tracking-[0.28em] text-charcoal/45">
-                  {cat}
-                </span>
-                <span className="h-[14px] w-px flex-shrink-0 bg-beige" aria-hidden="true" />
-              </span>
-            ))
-          )}
-        </div>
-      </div>
+  /* Append products with no category set at the very bottom */
+  if (uncategorized.length > 0) {
+    categories.push({
+      _id: '__uncategorized__',
+      title: 'Other',
+      slug: 'other',
+      background: BG_CYCLE[(primary.length + extras.length) % BG_CYCLE.length],
+      products: uncategorized,
+    })
+  }
 
-      {/* ── Masonry product grid ──────────────────────────────────── */}
-      <section className="px-4 py-10 md:px-6 md:py-14">
-
-        {products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-36 text-center">
-            <div className="mb-5 h-px w-8 bg-beige" />
-            <p className="type-eyebrow text-charcoal/30">No products yet</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {products.map((p, i) => (
-              <AnimateIn key={p._id} delay={(i % 5) * 0.04} y={16}>
-                <div className="group relative overflow-hidden">
-                  <SmartImage
-                    source={p.image}
-                    ratio="3/4"
-                    tone="light"
-                    alt=""
-                    width={700}
-                    className="w-full"
-                  />
-                  <div
-                    className="pointer-events-none absolute inset-0 bg-charcoal/0 transition-colors duration-500 group-hover:bg-charcoal/[0.06]"
-                    aria-hidden="true"
-                  />
-                </div>
-              </AnimateIn>
-            ))}
-          </div>
-        )}
-
-      </section>
-
-      {/* ── CTA ──────────────────────────────────────────────────── */}
-      <section className="border-t border-beige/70 bg-cream py-14 md:py-16">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-6 px-6 md:flex-row md:items-center md:justify-between md:px-12">
-          <div>
-            <h2 className="font-serif text-[1.6rem] font-normal text-charcoal md:text-[1.9rem]">
-              Brief us on your category.
-            </h2>
-            <p className="mt-1.5 type-small text-charcoal/55">
-              Share your programme and we'll match it to the right country and factory.
-            </p>
-          </div>
-          <Link
-            href="/contact"
-            className="group inline-flex h-11 flex-shrink-0 items-center gap-2.5 border border-soil/70 px-7 type-label text-soil transition-all duration-200 hover:bg-soil hover:text-ivory"
-          >
-            Start an Enquiry
-            <ArrowRight size={13} strokeWidth={1.6} className="transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </div>
-      </section>
-
-    </main>
-  )
+  return <CollectionView categories={categories} />
 }

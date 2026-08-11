@@ -22,7 +22,7 @@ import { gsap } from 'gsap'
 const VIDEO_SRC = '/intro.mp4'
 // Flip to true to show the intro only once per browser session instead of on
 // every hard refresh (matches the old loader's every-load behaviour when false).
-const PLAY_ONCE_PER_SESSION = false
+const PLAY_ONCE_PER_SESSION = true
 const SESSION_KEY = 'ca-intro-shown'
 // Safety net: reveal the site even if the video never fires `ended` / stalls.
 const FALLBACK_TIMEOUT_MS = 8500

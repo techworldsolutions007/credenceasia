@@ -14,11 +14,28 @@ export const product = defineType({
       options: {list: ['Women', 'Men', 'Kids', 'Outerwear', 'Activewear', 'Workwear', 'Denim', 'Knits', 'Woven', 'Accessories']},
     }),
     defineField({
+      name: 'gender',
+      title: 'Collection Tab (Men / Women)',
+      description:
+        'Which tab this product appears under on the Collection page. "Both" shows it under Men and Women. Products without a value appear under both tabs.',
+      type: 'string',
+      options: {list: ['Men', 'Women', 'Both'], layout: 'radio'},
+      initialValue: 'Both',
+    }),
+    defineField({
       name: 'image',
       title: 'Product Main Image (Collections Page Card)',
       description: 'Primary image for this product — shown on the Collections page product grid card. Recommended: portrait format (3:4 ratio), high quality garment photo on neutral background.',
       type: 'image',
       options: {hotspot: true},
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Brief description of the image for screen readers. Leave blank to hide from assistive technology.',
+        }),
+      ],
     }),
     defineField({
       name: 'title',
@@ -41,7 +58,13 @@ export const product = defineType({
       options: {layout: 'tags'},
     }),
     defineField({name: 'description', title: 'Short Description', type: 'text', rows: 3}),
-    defineField({name: 'featured', title: 'Show on Home Page?', type: 'boolean', initialValue: false}),
+    defineField({
+      name: 'featured',
+      title: 'Featured (Gallery Wide Tile)',
+      description: 'When enabled, this product appears as a full-width banner spanning all columns in the Gallery page. Use sparingly — at most one per category.',
+      type: 'boolean',
+      initialValue: false,
+    }),
     defineField({name: 'order', title: 'Display Order', type: 'number'}),
   ],
   preview: {select: {title: 'name', subtitle: 'category', media: 'image'}},
