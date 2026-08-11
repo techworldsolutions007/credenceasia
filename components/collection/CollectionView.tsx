@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { urlFor } from '@/sanity/lib/image'
 
 /* ── Types ──────────────────────────────────────────────────── */
@@ -68,157 +67,94 @@ function PlaceholderGrid() {
 /* ── Main component ─────────────────────────────────────────── */
 
 export default function CollectionView({ categories }: Props) {
-  const [active, setActive] = useState<string>(categories[0]?.slug ?? '')
-
-  useEffect(() => {
-    const anchors = categories.map((c) => c.slug).filter(Boolean) as string[]
-    if (!anchors.length) return
-    const observers = anchors.map((slug) => {
-      const el = document.getElementById(slug)
-      if (!el) return null
-      const io = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(slug) },
-        { rootMargin: '-40% 0px -50% 0px', threshold: 0 },
-      )
-      io.observe(el)
-      return io
-    })
-    return () => observers.forEach((o) => o?.disconnect())
-  }, [categories])
-
   return (
     <main style={{ minHeight: '100vh', background: '#F6F1E8', paddingTop: '68px' }}>
 
-      {/* ── Sticky secondary nav ──────────────────────────── */}
-      <nav
-        aria-label="Collection categories"
-        style={{
-          position: 'sticky',
-          top: '68px',
-          zIndex: 40,
-          background: 'rgba(246,241,232,0.92)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+{/* ── Hero ─────────────────────────────────────────────── */}
+      <section>
+        <style>{`
+          @keyframes ca-marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-25%); }
+          }
+        `}</style>
+
+        {/* Marquee strip */}
+        <div style={{
+          overflow: 'hidden',
+          borderTop: '1px solid rgba(223,212,191,0.7)',
           borderBottom: '1px solid rgba(223,212,191,0.7)',
-        }}
-      >
+          padding: '11px 0',
+          background: 'rgba(239,230,216,0.25)',
+        }}>
+          <div style={{
+            display: 'flex',
+            width: 'max-content',
+            animation: 'ca-marquee 32s linear infinite',
+          }}>
+            {Array.from({ length: 4 }).map((_, pass) =>
+              categories.map((cat) => (
+                <span
+                  key={`${pass}-${cat._id}`}
+                  style={{ display: 'inline-flex', alignItems: 'center', flexShrink: 0 }}
+                  aria-hidden={pass > 0 ? true : undefined}
+                >
+                  <span style={{
+                    padding: '0 clamp(18px,2.8vw,36px)',
+                    fontFamily: "'Outfit', sans-serif",
+                    fontSize: '11px',
+                    fontWeight: 500,
+                    letterSpacing: '0.24em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(37,36,33,0.42)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {shortLabel(cat.title)}
+                  </span>
+                  <span style={{
+                    width: '1px',
+                    height: '13px',
+                    background: 'rgba(223,212,191,0.85)',
+                    flexShrink: 0,
+                  }} aria-hidden="true" />
+                </span>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Text content */}
         <div style={{
           maxWidth: '1320px',
           margin: '0 auto',
-          padding: '0 clamp(20px,4vw,44px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px',
+          padding: 'clamp(48px,8vw,104px) clamp(20px,4vw,44px) clamp(40px,6vw,68px)',
         }}>
-          {/* Mini wordmark */}
-          <span style={{
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: '10px',
-            fontWeight: 500,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'rgba(37,36,33,0.45)',
-            flexShrink: 0,
+          <h1 style={{
+            fontFamily: "'Work Sans', sans-serif",
+            fontSize: 'clamp(36px,6.5vw,80px)',
+            lineHeight: 1.06,
+            margin: '0 0 20px',
+            fontWeight: 300,
+            letterSpacing: '-0.015em',
+            maxWidth: '12em',
+            color: '#252421',
           }}>
-            Credence Asia
-          </span>
+            The full range,{' '}
+            <span style={{ fontWeight: 600 }}>one source.</span>
+          </h1>
 
-          {/* Category anchor links */}
-          <div style={{
-            display: 'flex',
-            gap: 'clamp(10px,2vw,24px)',
-            overflowX: 'auto',
-            msOverflowStyle: 'none',
-            scrollbarWidth: 'none' as const,
+          <p style={{
+            maxWidth: '460px',
+            fontSize: 'clamp(14px,1.4vw,16px)',
+            lineHeight: 1.65,
+            color: 'rgba(37,36,33,0.52)',
+            margin: 0,
+            fontWeight: 300,
           }}>
-            {categories.filter((c) => c.slug).map((cat) => {
-              const isActive = active === cat.slug
-              return (
-                <a
-                  key={cat._id}
-                  href={`#${cat.slug}`}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    position: 'relative',
-                    padding: '13px 0',
-                    fontSize: '11px',
-                    fontWeight: 500,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: isActive ? '#3C4A34' : 'rgba(37,36,33,0.38)',
-                    textDecoration: 'none',
-                    whiteSpace: 'nowrap',
-                    flexShrink: 0,
-                    transition: 'color 0.2s',
-                  }}
-                >
-                  {shortLabel(cat.title)}
-                  {isActive && (
-                    <span style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: '2px',
-                      background: '#3C4A34',
-                      borderRadius: '1px',
-                    }} />
-                  )}
-                </a>
-              )
-            })}
-          </div>
+            Woven, Knits, Denim, Outerwear — everything a programme needs,
+            under one roof.
+          </p>
         </div>
-      </nav>
-
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section style={{
-        maxWidth: '1320px',
-        margin: '0 auto',
-        padding: 'clamp(52px,9vw,116px) clamp(20px,4vw,44px) clamp(40px,6vw,68px)',
-      }}>
-        {/* Eyebrow */}
-        <p style={{
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: '11px',
-          fontWeight: 500,
-          letterSpacing: '0.28em',
-          textTransform: 'uppercase',
-          color: 'rgba(100,112,82,0.85)',
-          margin: '0 0 20px',
-        }}>
-          The Collection — 2026
-        </p>
-
-        {/* Headline */}
-        <h1 style={{
-          fontFamily: "'Work Sans', sans-serif",
-          fontSize: 'clamp(36px,6.5vw,80px)',
-          lineHeight: 1.06,
-          margin: '0 0 20px',
-          fontWeight: 300,
-          letterSpacing: '-0.015em',
-          maxWidth: '14em',
-          color: '#252421',
-        }}>
-          Let the clothes{' '}
-          <span style={{ fontWeight: 600 }}>speak for themselves.</span>
-        </h1>
-
-        {/* Subtext */}
-        <p style={{
-          maxWidth: '460px',
-          fontSize: 'clamp(14px,1.4vw,16px)',
-          lineHeight: 1.65,
-          color: 'rgba(37,36,33,0.52)',
-          margin: 0,
-          fontWeight: 300,
-        }}>
-          No labels. No captions. A quiet gallery of everything we make — browse
-          by category, or simply scroll.
-        </p>
 
       </section>
 
