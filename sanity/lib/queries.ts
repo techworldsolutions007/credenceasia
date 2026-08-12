@@ -66,3 +66,12 @@ export const sustainabilityPageQuery = `*[_type == "sustainabilityPage"][0]{
 export const partnerLogosQuery = `*[_type == "partnerLogo" && isActive != false] | order(order asc, name asc){
   _id, name, logo
 }`
+
+export const denimGridQuery = `*[_type == "denimGrid"] | order(_updatedAt desc) {
+  _id, title, layout, headline,
+  images[] {
+    _key, alt,
+    "lqip": image.asset->metadata.lqip,
+    image
+  }
+}`

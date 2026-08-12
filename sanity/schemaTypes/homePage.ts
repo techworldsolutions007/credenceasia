@@ -12,7 +12,6 @@ export const homePage = defineType({
       initialValue: 'Home Page',
     }),
 
-    // Hero
     defineField({
       name: 'heroEyebrow',
       title: 'Hero Eyebrow',
@@ -58,7 +57,6 @@ export const homePage = defineType({
       initialValue: '/collection',
     }),
 
-    // About
     defineField({
       name: 'aboutTitle',
       title: 'About Section Title',
@@ -80,7 +78,6 @@ export const homePage = defineType({
       of: [{type: 'string'}],
     }),
 
-    // Production
     defineField({
       name: 'productionTitle',
       title: 'Production Network Title',
@@ -96,7 +93,6 @@ export const homePage = defineType({
         'Long-standing supply chain execution with a network of trusted factories across China, Bangladesh, India, Cambodia, Vietnam and Myanmar, coordinated from Hong Kong.',
     }),
 
-    // Garment Journey
     defineField({
       name: 'journeyStages',
       title: 'Garment Journey, Production Stages',
@@ -151,7 +147,7 @@ export const homePage = defineType({
           ],
           preview: {
             select: {title: 'label', subtitle: 'stat'},
-            prepare({title, subtitle}) {
+            prepare({title, subtitle}: Record<string, any>) {
               return {
                 title: title || 'Untitled stage',
                 subtitle: subtitle ? `Stat: ${subtitle}` : undefined,
@@ -162,7 +158,6 @@ export const homePage = defineType({
       ],
     }),
 
-    // Sustainability
     defineField({
       name: 'sustainabilityTitle',
       title: 'Sustainability Section Title',
@@ -178,7 +173,6 @@ export const homePage = defineType({
         'Real progress over marketing. We invest in audits, materials and routing that reduce impact today and document it so you can prove it to your customers.',
     }),
 
-    // Products
     defineField({
       name: 'productTitle',
       title: 'Products Section Title',
@@ -194,7 +188,6 @@ export const homePage = defineType({
         'Six product disciplines across our six-country network. From outerwear and denim to performance and casual programs.',
     }),
 
-    // Customers
     defineField({
       name: 'customersTitle',
       title: 'Customers Section Title',
@@ -210,7 +203,6 @@ export const homePage = defineType({
         'We partner with European and American brands and retailers who demand consistent quality, ethical compliance and transparent supply chain management.',
     }),
 
-    // CTA
     defineField({
       name: 'ctaTitle',
       title: 'CTA Heading',

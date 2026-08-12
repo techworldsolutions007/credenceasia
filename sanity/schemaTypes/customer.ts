@@ -17,7 +17,10 @@ export const customer = defineType({
       name: 'type',
       title: 'Customer Type',
       type: 'string',
-      options: {list: ['Brand', 'Retailer', 'Sourcing Partner', 'Other']},
+      options: {
+        list: ['Brand', 'Retailer', 'Sourcing Partner', 'Other'],
+        layout: 'radio',
+      },
     }),
     defineField({name: 'country', title: 'Country / Region', type: 'string'}),
     defineField({name: 'website', title: 'Website URL', type: 'url'}),

@@ -12,6 +12,7 @@ import {contactPage} from './contactPage'
 import {aboutPage} from './aboutPage'
 import {sustainabilityPage} from './sustainabilityPage'
 import {partnerLogo} from './partnerLogo'
+import {denimGrid} from './denimGrid'
 
 export const schema: {types: SchemaTypeDefinition[]} = {
   types: [
@@ -27,5 +28,6 @@ export const schema: {types: SchemaTypeDefinition[]} = {
     contactPage,
     aboutPage,
     sustainabilityPage,
+    denimGrid,
   ],
 }

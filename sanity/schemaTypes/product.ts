@@ -57,6 +57,23 @@ export const product = defineType({
       of: [{type: 'string'}],
       options: {layout: 'tags'},
     }),
+    defineField({
+      name: 'gridLayout',
+      title: 'Grid Layout',
+      description: 'Which denim grid layout to use when this product is displayed in the editorial grid. Leave blank to inherit the default.',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'A · Staggered Rail  (4 images)', value: 'A'},
+          {title: 'B · Hero + Row      (5 images)', value: 'B'},
+          {title: 'C · Even Five-Up   (5 images)', value: 'C'},
+          {title: 'D · Lifestyle Mix   (4 images)', value: 'D'},
+          {title: 'E · Edge-to-Edge Mosaic  (10 images)', value: 'E'},
+          {title: 'F · Swipe Strip    (5 images)', value: 'F'},
+        ],
+        layout: 'radio',
+      },
+    }),
     defineField({name: 'description', title: 'Short Description', type: 'text', rows: 3}),
     defineField({
       name: 'featured',

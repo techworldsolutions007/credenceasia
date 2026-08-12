@@ -1,10 +1,10 @@
 import type {Metadata} from 'next'
 import {client} from '@/sanity/lib/client'
 import CollectionView from '@/components/collection/CollectionView'
+import type {GridImage, DenimGridProps} from '@/components/DenimGrid'
 
 export const revalidate = 60
 
-/* Fetch every product that has an image asset */
 const PRODUCTS_QUERY = `
   *[_type == "product" && defined(image.asset)] | order(order asc, name asc) {
     _id,
@@ -15,7 +15,6 @@ const PRODUCTS_QUERY = `
   }
 `
 
-/* Fetch productCategory docs for ordering, headings, slugs, and backgrounds */
 const CATEGORIES_QUERY = `
   *[_type == "productCategory"] | order(order asc) {
     "name":       name,
@@ -23,6 +22,17 @@ const CATEGORIES_QUERY = `
     "slug":       slug.current,
     "background": coalesce(background, "ivory"),
     "order":      coalesce(order, 9999)
+  }
+`
+
+const DENIM_GRID_QUERY = `
+  *[_type == "denimGrid"] | order(_updatedAt desc) {
+    _id, title, layout, headline,
+    images[] {
+      _key, alt,
+      "lqip": image.asset->metadata.lqip,
+      image
+    }
   }
 `
 
@@ -42,6 +52,14 @@ type CategorySetting = {
   order: number
 }
 
+export type DenimGridDoc = {
+  _id: string
+  title?: string | null
+  layout: DenimGridProps['layout']
+  headline?: string | null
+  images: GridImage[]
+}
+
 const BG_CYCLE = ['ivory', 'cream', 'celadon', 'mist'] as const
 
 export const metadata: Metadata = {
@@ -51,16 +69,18 @@ export const metadata: Metadata = {
 }
 
 export default async function CollectionPage() {
-  const [products, catSettings] = await Promise.all([
+  const [products, catSettings, grids] = await Promise.all([
     client
       .fetch<RawProduct[]>(PRODUCTS_QUERY, {}, {next: {revalidate: 60}})
       .catch(() => [] as RawProduct[]),
     client
       .fetch<CategorySetting[]>(CATEGORIES_QUERY, {}, {next: {revalidate: 60}})
       .catch(() => [] as CategorySetting[]),
+    client
+      .fetch<DenimGridDoc[]>(DENIM_GRID_QUERY, {}, {next: {revalidate: 60}})
+      .catch(() => [] as DenimGridDoc[]),
   ])
 
-  /* Group products by their category string (case-insensitive key) */
   const productsByKey = new Map<string, RawProduct[]>()
   const uncategorized: RawProduct[] = []
   for (const p of products) {
@@ -70,10 +90,8 @@ export default async function CollectionPage() {
     productsByKey.get(key)!.push(p)
   }
 
-  /* Track which keys have been claimed by a productCategory doc */
   const claimed = new Set<string>()
 
-  /* Build the primary category list from productCategory docs (preserves CMS order) */
   const primary = catSettings
     .filter((s) => s.name)
     .map((s, idx) => {
@@ -90,7 +108,6 @@ export default async function CollectionPage() {
     })
     .sort((a, b) => a._order - b._order)
 
-  /* Append products whose category string has no matching productCategory doc */
   const extras = Array.from(productsByKey.entries())
     .filter(([key]) => !claimed.has(key))
     .map(([key, prods], idx) => ({
@@ -102,12 +119,10 @@ export default async function CollectionPage() {
       _order: 9999 + idx,
     }))
 
-  /* Strip internal _order and drop empty categories */
   const categories = [...primary, ...extras]
     .filter((cat) => cat.products.length > 0)
     .map(({_order, ...cat}) => cat)
 
-  /* Append products with no category set at the very bottom */
   if (uncategorized.length > 0) {
     categories.push({
       _id: '__uncategorized__',
@@ -118,5 +133,5 @@ export default async function CollectionPage() {
     })
   }
 
-  return <CollectionView categories={categories} />
+  return <CollectionView categories={categories} grids={grids} />
 }
