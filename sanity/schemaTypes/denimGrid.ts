@@ -47,7 +47,7 @@ export const denimGrid = defineType({
       title: 'Images',
       type: 'array',
       description:
-        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 9 imgs · Grid D: 10 imgs · Grid E: 5 imgs (all equal tall portraits, 1:3 ratio). Hint labels on the live page show exact upload sizes per slot.',
+        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 9 imgs · Grid D: 10 imgs · Grid E: 5 imgs (all equal tall portraits, 1:3 ratio).',
       of: [
         {
           type: 'object',

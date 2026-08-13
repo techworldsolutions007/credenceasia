@@ -21,7 +21,6 @@ export type DenimGridProps = {
 const CSS = `
 .dg-cell{position:relative;overflow:hidden;background:#ede8de}
 .dg-cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.dg-hint{position:absolute;bottom:7px;left:7px;font-family:'Cutive Mono',monospace;font-size:clamp(9px,2.5vw,11px);letter-spacing:.07em;color:rgba(255,255,255,.93);background:rgba(0,0,0,.48);padding:2px 7px;border-radius:2px;pointer-events:none;white-space:nowrap;line-height:1.5}
 
 /* GRID A — 4-col portrait grid (9 imgs) */
 .dg-a{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(200px,30vw,400px);gap:clamp(6px,.8vw,10px)}
@@ -100,13 +99,11 @@ function Cell({
   w = 800,
   eager,
   cls,
-  hint,
 }: {
   img: GridImage
   w?: number
   eager?: boolean
   cls?: string
-  hint?: string
 }) {
   return (
     <div className={['dg-cell', cls].filter(Boolean).join(' ')}>
@@ -116,7 +113,6 @@ function Cell({
         loading={eager ? 'eager' : 'lazy'}
         decoding="async"
       />
-      {hint && <span className="dg-hint">{hint}</span>}
     </div>
   )
 }
@@ -130,19 +126,17 @@ function Cell({
  * Upload: imgs 0-7 → 600 × 800 px · img8 → 1200 × 1600 px
  */
 function GridA({imgs}: {imgs: GridImage[]}) {
-  const S = '600 × 800 px'
-  const B = '1200 × 1600 px'
   return (
     <div className="dg-a">
-      {imgs[0] && <Cell img={imgs[0]} w={600} eager hint={S} />}
-      {imgs[1] && <Cell img={imgs[1]} w={600} hint={S} />}
-      {imgs[2] && <Cell img={imgs[2]} w={600} hint={S} />}
-      {imgs[3] && <Cell img={imgs[3]} w={600} hint={S} />}
-      {imgs[4] && <Cell img={imgs[4]} w={600} hint={S} />}
-      {imgs[5] && <Cell img={imgs[5]} w={600} hint={S} />}
-      {imgs[8] && <Cell img={imgs[8]} w={1200} cls="dg-big" hint={B} />}
-      {imgs[6] && <Cell img={imgs[6]} w={600} hint={S} />}
-      {imgs[7] && <Cell img={imgs[7]} w={600} hint={S} />}
+      {imgs[0] && <Cell img={imgs[0]} w={600} eager />}
+      {imgs[1] && <Cell img={imgs[1]} w={600} />}
+      {imgs[2] && <Cell img={imgs[2]} w={600} />}
+      {imgs[3] && <Cell img={imgs[3]} w={600} />}
+      {imgs[4] && <Cell img={imgs[4]} w={600} />}
+      {imgs[5] && <Cell img={imgs[5]} w={600} />}
+      {imgs[8] && <Cell img={imgs[8]} w={1200} cls="dg-big" />}
+      {imgs[6] && <Cell img={imgs[6]} w={600} />}
+      {imgs[7] && <Cell img={imgs[7]} w={600} />}
     </div>
   )
 }
@@ -156,11 +150,11 @@ function GridA({imgs}: {imgs: GridImage[]}) {
 function GridB({imgs}: {imgs: GridImage[]}) {
   return (
     <div className="dg-b">
-      {imgs[0] && <Cell img={imgs[0]} w={1200} eager cls="dg-wide" hint="800 × 1200 px" />}
-      {imgs[1] && <Cell img={imgs[1]} w={500} hint="400 × 1200 px" />}
-      {imgs[2] && <Cell img={imgs[2]} w={500} hint="400 × 1200 px" />}
-      {imgs[3] && <Cell img={imgs[3]} w={500} hint="400 × 1200 px" />}
-      {imgs[4] && <Cell img={imgs[4]} w={500} hint="400 × 1200 px" />}
+      {imgs[0] && <Cell img={imgs[0]} w={1200} eager cls="dg-wide" />}
+      {imgs[1] && <Cell img={imgs[1]} w={500} />}
+      {imgs[2] && <Cell img={imgs[2]} w={500} />}
+      {imgs[3] && <Cell img={imgs[3]} w={500} />}
+      {imgs[4] && <Cell img={imgs[4]} w={500} />}
     </div>
   )
 }
@@ -174,19 +168,17 @@ function GridB({imgs}: {imgs: GridImage[]}) {
  * Upload: img0 → 1200 × 1200 px · imgs 1-8 → 600 × 600 px
  */
 function GridC({imgs}: {imgs: GridImage[]}) {
-  const S = '600 × 600 px'
-  const B = '1200 × 1200 px'
   return (
     <div className="dg-c">
-      {imgs[0] && <Cell img={imgs[0]} w={1200} eager cls="dg-big" hint={B} />}
-      {imgs[1] && <Cell img={imgs[1]} w={600} hint={S} />}
-      {imgs[2] && <Cell img={imgs[2]} w={600} hint={S} />}
-      {imgs[3] && <Cell img={imgs[3]} w={600} hint={S} />}
-      {imgs[4] && <Cell img={imgs[4]} w={600} hint={S} />}
-      {imgs[5] && <Cell img={imgs[5]} w={600} hint={S} />}
-      {imgs[6] && <Cell img={imgs[6]} w={600} hint={S} />}
-      {imgs[7] && <Cell img={imgs[7]} w={600} hint={S} />}
-      {imgs[8] && <Cell img={imgs[8]} w={600} hint={S} />}
+      {imgs[0] && <Cell img={imgs[0]} w={1200} eager cls="dg-big" />}
+      {imgs[1] && <Cell img={imgs[1]} w={600} />}
+      {imgs[2] && <Cell img={imgs[2]} w={600} />}
+      {imgs[3] && <Cell img={imgs[3]} w={600} />}
+      {imgs[4] && <Cell img={imgs[4]} w={600} />}
+      {imgs[5] && <Cell img={imgs[5]} w={600} />}
+      {imgs[6] && <Cell img={imgs[6]} w={600} />}
+      {imgs[7] && <Cell img={imgs[7]} w={600} />}
+      {imgs[8] && <Cell img={imgs[8]} w={600} />}
     </div>
   )
 }
@@ -205,21 +197,18 @@ function GridC({imgs}: {imgs: GridImage[]}) {
  *   d3                      →  1200 × 1200 px (1:1 big square)
  */
 function GridD({imgs}: {imgs: GridImage[]}) {
-  const SQ   = '600 × 600 px'
-  const WIDE = '1200 × 600 px'
-  const BIG  = '1200 × 1200 px'
   return (
     <div className="dg-d">
-      {imgs[0] && <Cell img={imgs[0]} w={600}  eager cls="dg-d0" hint={SQ}   />}
-      {imgs[1] && <Cell img={imgs[1]} w={600}        cls="dg-d1" hint={SQ}   />}
-      {imgs[2] && <Cell img={imgs[2]} w={1200}       cls="dg-d2" hint={WIDE} />}
-      {imgs[3] && <Cell img={imgs[3]} w={1200}       cls="dg-d3" hint={BIG}  />}
-      {imgs[4] && <Cell img={imgs[4]} w={600}        cls="dg-d4" hint={SQ}   />}
-      {imgs[5] && <Cell img={imgs[5]} w={600}        cls="dg-d5" hint={SQ}   />}
-      {imgs[6] && <Cell img={imgs[6]} w={1200}       cls="dg-d6" hint={WIDE} />}
-      {imgs[7] && <Cell img={imgs[7]} w={600}        cls="dg-d7" hint={SQ}   />}
-      {imgs[8] && <Cell img={imgs[8]} w={1200}       cls="dg-d8" hint={WIDE} />}
-      {imgs[9] && <Cell img={imgs[9]} w={600}        cls="dg-d9" hint={SQ}   />}
+      {imgs[0] && <Cell img={imgs[0]} w={600}  eager cls="dg-d0" />}
+      {imgs[1] && <Cell img={imgs[1]} w={600}        cls="dg-d1" />}
+      {imgs[2] && <Cell img={imgs[2]} w={1200}       cls="dg-d2" />}
+      {imgs[3] && <Cell img={imgs[3]} w={1200}       cls="dg-d3" />}
+      {imgs[4] && <Cell img={imgs[4]} w={600}        cls="dg-d4" />}
+      {imgs[5] && <Cell img={imgs[5]} w={600}        cls="dg-d5" />}
+      {imgs[6] && <Cell img={imgs[6]} w={1200}       cls="dg-d6" />}
+      {imgs[7] && <Cell img={imgs[7]} w={600}        cls="dg-d7" />}
+      {imgs[8] && <Cell img={imgs[8]} w={1200}       cls="dg-d8" />}
+      {imgs[9] && <Cell img={imgs[9]} w={600}        cls="dg-d9" />}
     </div>
   )
 }
@@ -235,14 +224,13 @@ function GridD({imgs}: {imgs: GridImage[]}) {
  * Upload: all 5 images → 500 × 1500 px  (ratio 1:3 portrait)
  */
 function GridE({imgs}: {imgs: GridImage[]}) {
-  const HINT = '500 × 1500 px · 1:3 ratio'
   return (
     <div className="dg-e">
-      {imgs[0] && <Cell img={imgs[0]} w={600} eager hint={HINT} />}
-      {imgs[1] && <Cell img={imgs[1]} w={600} hint={HINT} />}
-      {imgs[2] && <Cell img={imgs[2]} w={600} hint={HINT} />}
-      {imgs[3] && <Cell img={imgs[3]} w={600} hint={HINT} />}
-      {imgs[4] && <Cell img={imgs[4]} w={600} cls="dg-e5" hint={HINT} />}
+      {imgs[0] && <Cell img={imgs[0]} w={600} eager />}
+      {imgs[1] && <Cell img={imgs[1]} w={600} />}
+      {imgs[2] && <Cell img={imgs[2]} w={600} />}
+      {imgs[3] && <Cell img={imgs[3]} w={600} />}
+      {imgs[4] && <Cell img={imgs[4]} w={600} cls="dg-e5" />}
     </div>
   )
 }
