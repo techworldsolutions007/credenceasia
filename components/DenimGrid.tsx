@@ -29,9 +29,11 @@ const CSS = `
 /* GRID B — 1 wide + 4 portrait single row (5 imgs) */
 .dg-b{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;grid-template-rows:clamp(360px,48vw,640px);gap:clamp(6px,.8vw,10px)}
 
-/* GRID C — bento 2x2 + 4 medium + 4 bottom (9 imgs) */
-.dg-c{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(140px,22vw,300px);gap:clamp(6px,.8vw,10px)}
-.dg-c .dg-big{grid-column:span 2;grid-row:span 2}
+/* GRID C — 1 big left + 3 cols right, rows step smaller diagonally (9 imgs) */
+.dg-c{display:grid;grid-template-columns:2fr 1.4fr 1.1fr 0.9fr;grid-template-rows:clamp(200px,26vw,360px) clamp(160px,20vw,280px) clamp(130px,17vw,230px);gap:clamp(6px,.8vw,10px)}
+.dg-c .dg-big{grid-column:1;grid-row:1/3}
+.dg-c .dg-c7{grid-column:1/3}
+.dg-c .dg-c8{grid-column:3/5}
 
 /* GRID D — asymmetric mosaic explicit placement (10 imgs) */
 .dg-d{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,clamp(140px,22vw,300px));gap:clamp(6px,.8vw,10px)}
@@ -55,7 +57,9 @@ const CSS = `
   .dg-a .dg-big{grid-column:span 2;grid-row:span 1}
   .dg-b{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:clamp(240px,36vw,420px)}
   .dg-b .dg-wide{grid-column:span 2}
-  .dg-c{grid-template-columns:repeat(3,1fr);grid-auto-rows:clamp(120px,20vw,240px)}
+  .dg-c{grid-template-columns:repeat(3,1fr);grid-template-rows:none;grid-auto-rows:clamp(130px,20vw,240px)}
+  .dg-c .dg-big{grid-column:span 2;grid-row:span 2}
+  .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto}
   .dg-d{grid-template-columns:repeat(3,1fr);grid-template-rows:none;grid-auto-rows:clamp(140px,22vw,260px)}
   .dg-d0,.dg-d1,.dg-d2,.dg-d3,.dg-d4,.dg-d5,.dg-d6,.dg-d7,.dg-d8,.dg-d9{grid-column:auto;grid-row:auto}
   .dg-d2{grid-column:span 2}
@@ -78,9 +82,10 @@ const CSS = `
   .dg-b{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
   .dg-b .dg-wide{grid-column:1/-1}
 
-  /* Grid C: 2-col, big square full width (no row span) */
-  .dg-c{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+  /* Grid C: 2-col, big full width, c7/c8 auto */
+  .dg-c{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
   .dg-c .dg-big{grid-column:1/-1;grid-row:auto}
+  .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto}
 
   /* Grid D: 2-col auto-flow, wide/big cells span full width */
   .dg-d{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
@@ -179,18 +184,23 @@ function GridB({imgs}: {imgs: GridImage[]}) {
  *
  * Upload: img0 → 1200 × 1200 px · imgs 1-8 → 600 × 600 px
  */
+/* Grid C layout (desktop):
+ * [ img0 BIG  ] [ img1 ] [ img2 ] [ img3 ]   row 1  (cols: 2fr 1.4fr 1.1fr 0.9fr)
+ * [ img0 BIG  ] [ img4 ] [ img5 ] [ img6 ]   row 2  (shorter)
+ * [ img7 c7   |  img7  ] [ img8 c8  | img8 ] row 3  (shorter still)
+ */
 function GridC({imgs}: {imgs: GridImage[]}) {
   return (
     <div className="dg-c">
       {imgs[0] && <Cell img={imgs[0]} w={1200} eager cls="dg-big" />}
-      {imgs[1] && <Cell img={imgs[1]} w={600} />}
+      {imgs[1] && <Cell img={imgs[1]} w={700} />}
       {imgs[2] && <Cell img={imgs[2]} w={600} />}
-      {imgs[3] && <Cell img={imgs[3]} w={600} />}
-      {imgs[4] && <Cell img={imgs[4]} w={600} />}
+      {imgs[3] && <Cell img={imgs[3]} w={500} />}
+      {imgs[4] && <Cell img={imgs[4]} w={700} />}
       {imgs[5] && <Cell img={imgs[5]} w={600} />}
-      {imgs[6] && <Cell img={imgs[6]} w={600} />}
-      {imgs[7] && <Cell img={imgs[7]} w={600} />}
-      {imgs[8] && <Cell img={imgs[8]} w={600} />}
+      {imgs[6] && <Cell img={imgs[6]} w={500} />}
+      {imgs[7] && <Cell img={imgs[7]} w={900} cls="dg-c7" />}
+      {imgs[8] && <Cell img={imgs[8]} w={900} cls="dg-c8" />}
     </div>
   )
 }
