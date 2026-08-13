@@ -66,21 +66,33 @@ const CSS = `
   .dg-e .dg-e5{grid-column:span 2}
 }
 
-/* MOBILE <640px */
+/* MOBILE <640px — no cropping, images at natural ratio */
 @media(max-width:639px){
-  .dg-a{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(140px,40vw,220px)}
-  .dg-a .dg-big{grid-column:span 2;grid-row:span 1}
-  .dg-b{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:clamp(180px,46vw,280px)}
-  .dg-b .dg-wide{grid-column:span 2}
-  .dg-c{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(110px,28vw,180px)}
-  .dg-d{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:clamp(130px,38vw,200px)}
+  .dg-cell img{position:static;width:100%;height:auto;object-fit:initial}
+
+  /* Grid A: 2-col, feature image spans full width */
+  .dg-a{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+  .dg-a .dg-big{grid-column:1/-1;grid-row:auto}
+
+  /* Grid B: wide image full width, 4 portraits in 2-col below */
+  .dg-b{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
+  .dg-b .dg-wide{grid-column:1/-1}
+
+  /* Grid C: 2-col, big square full width (no row span) */
+  .dg-c{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+  .dg-c .dg-big{grid-column:1/-1;grid-row:auto}
+
+  /* Grid D: 2-col auto-flow, wide/big cells span full width */
+  .dg-d{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
   .dg-d0,.dg-d1,.dg-d2,.dg-d3,.dg-d4,.dg-d5,.dg-d6,.dg-d7,.dg-d8,.dg-d9{grid-column:auto;grid-row:auto}
-  .dg-d2{grid-column:span 2}
-  .dg-d3{grid-column:span 2;grid-row:span 1}
-  .dg-d6{grid-column:span 2}
-  .dg-d8{grid-column:span 2}
-  .dg-e{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:clamp(260px,60vw,400px)}
-  .dg-e .dg-e5{grid-column:span 2}
+  .dg-d2{grid-column:1/-1}
+  .dg-d3{grid-column:1/-1}
+  .dg-d6{grid-column:1/-1}
+  .dg-d8{grid-column:1/-1}
+
+  /* Grid E: 2-col, 5th image spans full width */
+  .dg-e{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
+  .dg-e .dg-e5{grid-column:1/-1}
 }
 `
 
