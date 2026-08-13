@@ -122,7 +122,6 @@ export default function CollectionView({categories, grids}: Props) {
               key={grid._id}
               layout={grid.layout}
               images={grid.images ?? []}
-              headline={grid.headline}
             />
           ))}
         </section>

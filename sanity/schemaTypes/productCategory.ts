@@ -32,6 +32,13 @@ export const productCategory = defineType({
       options: {list: ['ivory', 'cream', 'celadon', 'mist'], layout: 'radio'},
       initialValue: 'ivory',
     }),
+    defineField({
+      name: 'denimGrid',
+      title: 'Denim Grid',
+      description: 'Optional denim-layout image grid shown in the Collection page for this category.',
+      type: 'reference',
+      to: [{type: 'denimGrid'}],
+    }),
   ],
   preview: {select: {title: 'name', subtitle: 'shortText', media: 'image'}},
   orderings: [{

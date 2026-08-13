@@ -27,7 +27,7 @@ const CATEGORIES_QUERY = `
 
 const DENIM_GRID_QUERY = `
   *[_type == "denimGrid"] | order(_updatedAt desc) {
-    _id, title, layout, headline,
+    _id, title, layout,
     images[] {
       _key, alt,
       "lqip": image.asset->metadata.lqip,
@@ -55,8 +55,7 @@ type CategorySetting = {
 export type DenimGridDoc = {
   _id: string
   title?: string | null
-  layout: DenimGridProps['layout']
-  headline?: string | null
+  layout: DenimGridProps['layout']  // 'A' | 'B' | 'C' | 'D'
   images: GridImage[]
 }
 

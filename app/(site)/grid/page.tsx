@@ -14,7 +14,6 @@ const DENIM_GRID_QUERY = `
     _id,
     title,
     layout,
-    headline,
     images[] {
       _key,
       alt,
@@ -28,7 +27,6 @@ type DenimGridDoc = {
   _id: string
   title?: string | null
   layout: DenimGridProps['layout']
-  headline?: string | null
   images: GridImage[]
 }
 
@@ -143,7 +141,7 @@ export default async function GridPage() {
                     textTransform: 'uppercase',
                   }}
                 >
-                  {grid.title ?? `Layout ${grid.layout}`}
+                  {grid.title ?? 'Denim Grid A'}
                 </h2>
                 <span
                   style={{
@@ -159,7 +157,6 @@ export default async function GridPage() {
               <DenimGrid
                 layout={grid.layout}
                 images={grid.images ?? []}
-                headline={grid.headline}
               />
             </section>
           ))

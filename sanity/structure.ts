@@ -1,4 +1,4 @@
-import {CogIcon, LeaveIcon, PackageIcon, UsersIcon, EarthGlobeIcon, DocumentIcon} from '@sanity/icons'
+import {CogIcon, LeaveIcon, PackageIcon, UsersIcon, EarthGlobeIcon, DocumentIcon, ImagesIcon} from '@sanity/icons'
 import type {StructureResolver} from 'sanity/structure'
 
 export const structure: StructureResolver = (S) =>
@@ -56,6 +56,21 @@ export const structure: StructureResolver = (S) =>
               S.documentTypeListItem('productCategory').title('Product Categories'),
               S.documentTypeListItem('product').title('Products'),
             ]),
+        ),
+
+      // ── Collection Grids ───────────────────────────────────────────────
+      S.listItem()
+        .title('Collection Grids')
+        .icon(ImagesIcon)
+        .child(
+          S.documentTypeList('denimGrid')
+            .title('Collection Grids')
+            .child((id) =>
+              S.document()
+                .documentId(id)
+                .schemaType('denimGrid')
+                .views([S.view.form()])
+            )
         ),
 
       // ── Customers ──────────────────────────────────────────────────────

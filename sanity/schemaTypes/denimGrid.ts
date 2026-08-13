@@ -17,27 +17,37 @@ export const denimGrid = defineType({
       type: 'string',
       options: {
         list: [
-          {title: 'A · Staggered Rail  (4 images)', value: 'A'},
-          {title: 'B · Hero + Row      (5 images)', value: 'B'},
-          {title: 'C · Even Five-Up   (5 images)', value: 'C'},
-          {title: 'D · Lifestyle Mix   (4 images)', value: 'D'},
-          {title: 'E · Edge-to-Edge Mosaic  (10 images)', value: 'E'},
-          {title: 'F · Swipe Strip    (5 images)', value: 'F'},
+          {
+            title: 'Grid A — 4 top portraits + 4 small + 1 wide feature (9 images)',
+            value: 'A',
+          },
+          {
+            title: 'Grid B — 1 wide feature + 4 tall portraits, single row (5 images)',
+            value: 'B',
+          },
+          {
+            title: 'Grid C — Bento: 1 big square + 4 medium + 4 bottom squares (9 images)',
+            value: 'C',
+          },
+          {
+            title: 'Grid D — Asymmetric mosaic: varied wide + square cells (10 images)',
+            value: 'D',
+          },
+          {
+            title: 'Grid E — 5 equal tall portraits in a single row (5 images)',
+            value: 'E',
+          },
         ],
         layout: 'radio',
       },
-    }),
-    defineField({
-      name: 'headline',
-      title: 'Headline / Copy Text',
-      type: 'string',
-      description: 'Short text used in B (below hero image), D (above portrait), and E (mosaic caption).',
+      initialValue: 'A',
     }),
     defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
-      description: 'Upload images here. Required count — A: 4 · B: 5 · C: 5 · D: 4 · E: 10 · F: 5',
+      description:
+        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 9 imgs · Grid D: 10 imgs · Grid E: 5 imgs (all equal tall portraits, 1:3 ratio). Hint labels on the live page show exact upload sizes per slot.',
       of: [
         {
           type: 'object',
@@ -67,11 +77,11 @@ export const denimGrid = defineType({
     }),
   ],
   preview: {
-    select: {title: 'title', subtitle: 'layout'},
-    prepare({title, subtitle}: Record<string, any>) {
+    select: {title: 'title', layout: 'layout'},
+    prepare({title, layout}: Record<string, any>) {
       return {
         title: title ?? 'Denim Grid',
-        subtitle: subtitle ? `Layout ${subtitle}` : 'No layout selected',
+        subtitle: layout ? `Grid ${layout}` : 'No layout selected',
       }
     },
   },
