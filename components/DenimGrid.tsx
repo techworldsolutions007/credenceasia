@@ -19,24 +19,24 @@ export type DenimGridProps = {
    Injected as a real <style> tag so they survive every rendering path
    (SSR, client nav, 'use client' boundary). "dg-" prefix scopes all names.  */
 const CSS = `
-.dg-cell{position:relative;overflow:hidden;background:#ede8de}
-.dg-cell img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.dg-cell{background:#ede8de}
+.dg-cell img{width:100%;height:auto;display:block}
 
 /* GRID A — 4-col portrait grid (9 imgs) */
-.dg-a{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(200px,30vw,400px);gap:clamp(6px,.8vw,10px)}
+.dg-a{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.8vw,10px)}
 .dg-a .dg-big{grid-column:span 2;grid-row:span 2}
 
 /* GRID B — 1 wide + 4 portrait single row (5 imgs) */
-.dg-b{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;grid-template-rows:clamp(360px,48vw,640px);gap:clamp(6px,.8vw,10px)}
+.dg-b{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:clamp(6px,.8vw,10px)}
 
-/* GRID C — 1 big left + 3 cols right, rows step smaller diagonally (9 imgs) */
-.dg-c{display:grid;grid-template-columns:2fr 1.4fr 1.1fr 0.9fr;grid-template-rows:clamp(200px,26vw,360px) clamp(160px,20vw,280px) clamp(130px,17vw,230px);gap:clamp(6px,.8vw,10px)}
+/* GRID C — 1 big left + 3 cols right, cols step narrower (9 imgs) */
+.dg-c{display:grid;grid-template-columns:2fr 1.4fr 1.1fr 0.9fr;gap:clamp(6px,.8vw,10px)}
 .dg-c .dg-big{grid-column:1;grid-row:1/3}
 .dg-c .dg-c7{grid-column:1/3}
 .dg-c .dg-c8{grid-column:3/5}
 
 /* GRID D — asymmetric mosaic explicit placement (10 imgs) */
-.dg-d{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,clamp(140px,22vw,300px));gap:clamp(6px,.8vw,10px)}
+.dg-d{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.8vw,10px)}
 .dg-d0{grid-column:1;grid-row:1}
 .dg-d1{grid-column:2;grid-row:1}
 .dg-d2{grid-column:3/5;grid-row:1}
@@ -49,54 +49,43 @@ const CSS = `
 .dg-d9{grid-column:4;grid-row:4}
 
 /* GRID E — 5 equal tall portraits (5 imgs) */
-.dg-e{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:clamp(420px,56vw,720px);gap:clamp(6px,.8vw,10px)}
+.dg-e{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(6px,.8vw,10px)}
 
 /* TABLET 640-1023px */
 @media(max-width:1023px) and (min-width:640px){
-  .dg-a{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(180px,28vw,320px)}
-  .dg-a .dg-big{grid-column:span 2;grid-row:span 1}
-  .dg-b{grid-template-columns:repeat(2,1fr);grid-template-rows:none;grid-auto-rows:clamp(240px,36vw,420px)}
+  .dg-a{grid-template-columns:repeat(2,1fr)}
+  .dg-a .dg-big{grid-column:span 2;grid-row:span 2}
+  .dg-b{grid-template-columns:repeat(2,1fr)}
   .dg-b .dg-wide{grid-column:span 2}
-  .dg-c{grid-template-columns:repeat(3,1fr);grid-template-rows:none;grid-auto-rows:clamp(130px,20vw,240px)}
+  .dg-c{grid-template-columns:repeat(3,1fr)}
   .dg-c .dg-big{grid-column:span 2;grid-row:span 2}
   .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto}
-  .dg-d{grid-template-columns:repeat(3,1fr);grid-template-rows:none;grid-auto-rows:clamp(140px,22vw,260px)}
+  .dg-d{grid-template-columns:repeat(3,1fr)}
   .dg-d0,.dg-d1,.dg-d2,.dg-d3,.dg-d4,.dg-d5,.dg-d6,.dg-d7,.dg-d8,.dg-d9{grid-column:auto;grid-row:auto}
   .dg-d2{grid-column:span 2}
   .dg-d3{grid-column:span 2;grid-row:span 2}
   .dg-d6{grid-column:span 2}
   .dg-d8{grid-column:span 2}
-  .dg-e{grid-template-columns:repeat(3,1fr);grid-template-rows:none;grid-auto-rows:clamp(320px,44vw,560px)}
+  .dg-e{grid-template-columns:repeat(3,1fr)}
   .dg-e .dg-e5{grid-column:span 2}
 }
 
-/* MOBILE <640px — no cropping, images at natural ratio */
+/* MOBILE <640px */
 @media(max-width:639px){
-  .dg-cell img{position:static;width:100%;height:auto;object-fit:initial}
-
-  /* Grid A: 2-col, feature image spans full width */
-  .dg-a{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+  .dg-a{grid-template-columns:1fr 1fr}
   .dg-a .dg-big{grid-column:1/-1;grid-row:auto}
-
-  /* Grid B: wide image full width, 4 portraits in 2-col below */
-  .dg-b{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
+  .dg-b{grid-template-columns:1fr 1fr}
   .dg-b .dg-wide{grid-column:1/-1}
-
-  /* Grid C: 2-col, big full width, c7/c8 auto */
-  .dg-c{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
+  .dg-c{grid-template-columns:1fr 1fr}
   .dg-c .dg-big{grid-column:1/-1;grid-row:auto}
   .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto}
-
-  /* Grid D: 2-col auto-flow, wide/big cells span full width */
-  .dg-d{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
+  .dg-d{grid-template-columns:1fr 1fr}
   .dg-d0,.dg-d1,.dg-d2,.dg-d3,.dg-d4,.dg-d5,.dg-d6,.dg-d7,.dg-d8,.dg-d9{grid-column:auto;grid-row:auto}
   .dg-d2{grid-column:1/-1}
   .dg-d3{grid-column:1/-1}
   .dg-d6{grid-column:1/-1}
   .dg-d8{grid-column:1/-1}
-
-  /* Grid E: 2-col, 5th image spans full width */
-  .dg-e{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:auto}
+  .dg-e{grid-template-columns:1fr 1fr}
   .dg-e .dg-e5{grid-column:1/-1}
 }
 `
