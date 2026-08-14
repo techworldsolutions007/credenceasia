@@ -26,11 +26,11 @@ export const denimGrid = defineType({
             value: 'B',
           },
           {
-            title: 'Grid C — Bento: 1 big square + 4 medium + 4 bottom squares (9 images)',
+            title: 'Grid C — Bento: 2×2 hero + 1×2 portrait + 4 squares + 2×1 wide (7 images)',
             value: 'C',
           },
           {
-            title: 'Grid D — Asymmetric mosaic: varied wide + square cells (10 images)',
+            title: 'Grid D — 4-col square grid (12 images)',
             value: 'D',
           },
           {
@@ -43,11 +43,18 @@ export const denimGrid = defineType({
       initialValue: 'A',
     }),
     defineField({
+      name: 'published',
+      title: 'Published',
+      type: 'boolean',
+      description: 'Uncheck to hide this grid from the collection page without deleting it.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
       description:
-        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 9 imgs · Grid D: 10 imgs · Grid E: 5 imgs (all equal tall portraits, 1:3 ratio).',
+        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 7 imgs (bento) · Grid D: 12 imgs (4×3 squares) · Grid E: 5 imgs',
       of: [
         {
           type: 'object',

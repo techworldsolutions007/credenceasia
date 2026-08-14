@@ -38,18 +38,27 @@ const CSS = `
 .dg-b .dg-wide{aspect-ratio:2/3}
 .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
 
-/* GRID C — diagonal 4-col, cols + rows step down (9 imgs)
-   Big cell (col1 rows 1+2) has aspect-ratio 2:3 → drives row heights.
-   Right cells (.dg-cr) fill the row via grid-stretch on desktop; on mobile
-   they fall back to their own 3:4 aspect-ratio.
-   Bottom cells c7/c8 (wide landscape) are unavoidable in this layout.
-   Upload: img0 = 800×1200 px · imgs 1-6 = 600×800 px
-           img7 = 900×500 px  · img8 = 700×500 px */
-.dg-c{display:grid;grid-template-columns:2fr 1.4fr 1.1fr 0.9fr;gap:clamp(6px,.8vw,10px)}
-.dg-c .dg-big{grid-column:1;grid-row:1/3;aspect-ratio:2/3}
-.dg-c .dg-cr{aspect-ratio:3/4}
-.dg-c .dg-c7{grid-column:1/3;aspect-ratio:9/5}
-.dg-c .dg-c8{grid-column:3/5;aspect-ratio:7/5}
+/* GRID C — bento mosaic (7 imgs, 4 cols × 3 rows)
+   1×1 square cells drive row height = col-width.
+   Spanning cells fill their tracks naturally.
+   ┌─────────────┬───────┬───────┐
+   │   c0 (2×2)  │c1(1×2)│  c2   │
+   │             │       ├───────┤
+   │             │       │  c3   │
+   ├───────┬─────┴───────┬───────┤
+   │  c4   │   c5 (2×1)  │  c6   │
+   └───────┴─────────────┴───────┘
+   Upload: c0 = 1200×1200 px · c1 = 600×1200 px
+           c2,c3,c4,c6 = 600×600 px · c5 = 1200×600 px */
+.dg-c{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.8vw,10px)}
+.dg-c2,.dg-c3,.dg-c4,.dg-c6{aspect-ratio:1/1}
+.dg-c0{grid-column:1/3;grid-row:1/3}
+.dg-c1{grid-column:3;grid-row:1/3}
+.dg-c2{grid-column:4;grid-row:1}
+.dg-c3{grid-column:4;grid-row:2}
+.dg-c4{grid-column:1;grid-row:3}
+.dg-c5{grid-column:2/4;grid-row:3}
+.dg-c6{grid-column:4;grid-row:3}
 
 /* GRID D — 4-col square grid (12 imgs)
    All cells equal 1:1.  Auto-flow fills 3 rows of 4.
@@ -68,9 +77,7 @@ const CSS = `
   .dg-a .dg-big{grid-column:span 2;grid-row:span 2}
   .dg-b{grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr}
   .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
-  .dg-c{grid-template-columns:repeat(3,1fr)}
-  .dg-c .dg-big{grid-column:span 2;grid-row:span 2}
-  .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto;aspect-ratio:3/4}
+  .dg-c{grid-template-columns:repeat(4,1fr)}
   .dg-d{grid-template-columns:repeat(4,1fr)}
   .dg-e{grid-template-columns:repeat(3,1fr)}
   .dg-e .dg-e5{grid-column:span 2}
@@ -82,9 +89,8 @@ const CSS = `
   .dg-a .dg-big{grid-column:1/-1;grid-row:auto}
   .dg-b{grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr}
   .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
-  .dg-c{grid-template-columns:1fr 1fr}
-  .dg-c .dg-big{grid-column:1/-1;grid-row:auto}
-  .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto;aspect-ratio:3/4}
+  .dg-c{grid-template-columns:repeat(2,1fr)}
+  .dg-c0,.dg-c1,.dg-c2,.dg-c3,.dg-c4,.dg-c5,.dg-c6{grid-column:auto;grid-row:auto;aspect-ratio:1/1}
   .dg-d{grid-template-columns:repeat(4,1fr)}
   .dg-e{grid-template-columns:1fr 1fr}
   .dg-e .dg-e5{grid-column:1/-1}
@@ -122,7 +128,6 @@ function Cell({
         loading={eager ? 'eager' : 'lazy'}
         decoding="async"
       />
-      {hint && <span className="dg-hint">{hint}</span>}
     </div>
   )
 }
@@ -173,32 +178,29 @@ function GridB({imgs}: {imgs: GridImage[]}) {
   )
 }
 
-/* ── Grid C · diagonal 4-col (9 images) ──────────────────────────────────
+/* ── Grid C · bento mosaic (7 images) ────────────────────────────────────
  *
- * [ img0 big ] [ img1 ] [ img2 ] [ img3 ]  row 1
- * [ img0 big ] [ img4 ] [ img5 ] [ img6 ]  row 2
- * [  img7 c7  wide  ] [  img8 c8  wide  ]  row 3
+ * ┌─────────────┬───────┬───────┐
+ * │   c0 (2×2)  │c1(1×2)│  c2   │
+ * │             │       ├───────┤
+ * │             │       │  c3   │
+ * ├───────┬─────┴───────┬───────┤
+ * │  c4   │   c5 (2×1)  │  c6   │
+ * └───────┴─────────────┴───────┘
  *
- * img0 (big, col1 rows1-2): aspect-ratio 2:3 drives row heights.
- * imgs 1-6 (.dg-cr): fill row height on desktop; 3:4 on mobile.
- * imgs 7-8 (c7, c8): wide landscape cells — unavoidable in this layout.
- *
- * Upload: img0 = 800×1200 px · imgs 1-6 = 600×800 px
- *         img7 = 900×500 px  · img8 = 700×500 px
+ * Upload: c0 = 1200×1200 px (1:1) · c1 = 600×1200 px (1:2)
+ *         c2, c3, c4, c6 = 600×600 px (1:1) · c5 = 1200×600 px (2:1)
  */
 function GridC({imgs}: {imgs: GridImage[]}) {
-  const P = '600 × 800 px'
   return (
     <div className="dg-c">
-      {imgs[0] && <Cell img={imgs[0]} w={1000} eager cls="dg-big"  hint="800 × 1200 px" />}
-      {imgs[1] && <Cell img={imgs[1]} w={700}        cls="dg-cr"   hint={P} />}
-      {imgs[2] && <Cell img={imgs[2]} w={600}        cls="dg-cr"   hint={P} />}
-      {imgs[3] && <Cell img={imgs[3]} w={500}        cls="dg-cr"   hint={P} />}
-      {imgs[4] && <Cell img={imgs[4]} w={700}        cls="dg-cr"   hint={P} />}
-      {imgs[5] && <Cell img={imgs[5]} w={600}        cls="dg-cr"   hint={P} />}
-      {imgs[6] && <Cell img={imgs[6]} w={500}        cls="dg-cr"   hint={P} />}
-      {imgs[7] && <Cell img={imgs[7]} w={900}        cls="dg-c7"   hint="900 × 500 px" />}
-      {imgs[8] && <Cell img={imgs[8]} w={700}        cls="dg-c8"   hint="700 × 500 px" />}
+      {imgs[0] && <Cell img={imgs[0]} w={1200} eager cls="dg-c0" hint="1200 × 1200 px" />}
+      {imgs[1] && <Cell img={imgs[1]} w={600}        cls="dg-c1" hint="600 × 1200 px"  />}
+      {imgs[2] && <Cell img={imgs[2]} w={600}        cls="dg-c2" hint="600 × 600 px"   />}
+      {imgs[3] && <Cell img={imgs[3]} w={600}        cls="dg-c3" hint="600 × 600 px"   />}
+      {imgs[4] && <Cell img={imgs[4]} w={600}        cls="dg-c4" hint="600 × 600 px"   />}
+      {imgs[5] && <Cell img={imgs[5]} w={1200}       cls="dg-c5" hint="1200 × 600 px"  />}
+      {imgs[6] && <Cell img={imgs[6]} w={600}        cls="dg-c6" hint="600 × 600 px"   />}
     </div>
   )
 }

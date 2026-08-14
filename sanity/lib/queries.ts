@@ -67,7 +67,7 @@ export const partnerLogosQuery = `*[_type == "partnerLogo" && isActive != false]
   _id, name, logo
 }`
 
-export const denimGridQuery = `*[_type == "denimGrid"] | order(_updatedAt desc) {
+export const denimGridQuery = `*[_type == "denimGrid" && published != false] | order(_updatedAt desc) {
   _id, title, layout, headline,
   images[] {
     _key, alt,
