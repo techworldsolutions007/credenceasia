@@ -31,12 +31,12 @@ const CSS = `
 .dg-a .dg-big{grid-column:span 2;grid-row:span 2}
 
 /* GRID B — 5 tall portraits, single row (5 imgs)
-   Feature (2fr) drives row height at 2:3.  Portrait cols (1fr) inherit that
-   row height → each renders at 1:3.  Same on every screen size.
-   Upload: img0 (feature) = 800×1200 px · imgs 1-4 = 400×1200 px */
-.dg-b{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:clamp(6px,.8vw,10px)}
+   Feature (2fr) drives row height at 2:3.  Portrait cols (1.5fr) inherit that
+   row height → each renders at 1:2.  Same on every screen size.
+   Upload: img0 (feature) = 800×1200 px · imgs 1-4 = 600×1200 px (1:2) */
+.dg-b{display:grid;grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr;gap:clamp(6px,.8vw,10px)}
 .dg-b .dg-wide{aspect-ratio:2/3}
-.dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/3}
+.dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
 
 /* GRID C — diagonal 4-col, cols + rows step down (9 imgs)
    Big cell (col1 rows 1+2) has aspect-ratio 2:3 → drives row heights.
@@ -51,25 +51,11 @@ const CSS = `
 .dg-c .dg-c7{grid-column:1/3;aspect-ratio:9/5}
 .dg-c .dg-c8{grid-column:3/5;aspect-ratio:7/5}
 
-/* GRID D — portrait-first mosaic (10 imgs)
-   All cells base aspect-ratio 1:1 (square).
-   d0 and d2 span 2 rows → automatically render at 1:2 tall portrait.
-   Row 1: [d0 tall][d1][d2 tall][d3]
-   Row 2: [d0     ][d4][d2     ][d5]
-   Row 3: [d6][d7][d8][d9]
-   Upload: d0,d2 = 600×1200 px · d1,d3,d4,d5 = 600×600 px · d6-d9 = 600×600 px */
+/* GRID D — 4-col square grid (12 imgs)
+   All cells equal 1:1.  Auto-flow fills 3 rows of 4.
+   Upload: all 12 = 600×600 px */
 .dg-d{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.8vw,10px)}
 .dg-d .dg-cell{aspect-ratio:1/1}
-.dg-d0{grid-column:1;grid-row:1/3}
-.dg-d1{grid-column:2;grid-row:1}
-.dg-d2{grid-column:3;grid-row:1/3}
-.dg-d3{grid-column:4;grid-row:1}
-.dg-d4{grid-column:2;grid-row:2}
-.dg-d5{grid-column:4;grid-row:2}
-.dg-d6{grid-column:1;grid-row:3}
-.dg-d7{grid-column:2;grid-row:3}
-.dg-d8{grid-column:3;grid-row:3}
-.dg-d9{grid-column:4;grid-row:3}
 
 /* GRID E — 5 equal tall portraits (5 imgs)
    Upload: all 5 = 600×900 px (2:3) */
@@ -80,15 +66,12 @@ const CSS = `
 @media(max-width:1023px) and (min-width:640px){
   .dg-a{grid-template-columns:repeat(2,1fr)}
   .dg-a .dg-big{grid-column:span 2;grid-row:span 2}
-  .dg-b{grid-template-columns:1fr 1fr}
-  .dg-b .dg-wide{grid-column:span 2}
-  .dg-b .dg-cell:not(.dg-wide){aspect-ratio:2/3}
+  .dg-b{grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr}
+  .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
   .dg-c{grid-template-columns:repeat(3,1fr)}
   .dg-c .dg-big{grid-column:span 2;grid-row:span 2}
   .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto;aspect-ratio:3/4}
-  .dg-d{grid-template-columns:repeat(3,1fr)}
-  .dg-d0,.dg-d1,.dg-d2,.dg-d3,.dg-d4,.dg-d5,.dg-d6,.dg-d7,.dg-d8,.dg-d9{grid-column:auto;grid-row:auto}
-  .dg-d0,.dg-d2{grid-row:span 2}
+  .dg-d{grid-template-columns:repeat(4,1fr)}
   .dg-e{grid-template-columns:repeat(3,1fr)}
   .dg-e .dg-e5{grid-column:span 2}
 }
@@ -97,14 +80,12 @@ const CSS = `
 @media(max-width:639px){
   .dg-a{grid-template-columns:1fr 1fr}
   .dg-a .dg-big{grid-column:1/-1;grid-row:auto}
-  .dg-b{grid-template-columns:1fr 1fr}
-  .dg-b .dg-wide{grid-column:1/-1}
-  .dg-b .dg-cell:not(.dg-wide){aspect-ratio:3/4}
+  .dg-b{grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr}
+  .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
   .dg-c{grid-template-columns:1fr 1fr}
   .dg-c .dg-big{grid-column:1/-1;grid-row:auto}
   .dg-c .dg-c7,.dg-c .dg-c8{grid-column:auto;grid-row:auto;aspect-ratio:3/4}
-  .dg-d{grid-template-columns:1fr 1fr}
-  .dg-d0,.dg-d1,.dg-d2,.dg-d3,.dg-d4,.dg-d5,.dg-d6,.dg-d7,.dg-d8,.dg-d9{grid-column:auto;grid-row:auto}
+  .dg-d{grid-template-columns:repeat(4,1fr)}
   .dg-e{grid-template-columns:1fr 1fr}
   .dg-e .dg-e5{grid-column:1/-1}
 }
@@ -177,17 +158,17 @@ function GridA({imgs}: {imgs: GridImage[]}) {
  * [ img0 — feature 2fr ] [ img1 ] [ img2 ] [ img3 ] [ img4 ]
  *
  * Feature drives row height at 2:3.  Portrait columns inherit that height
- * and render at 1:3 (half the width, same height).
- * Upload: img0 = 800×1200 px (2:3) · imgs 1-4 = 400×1200 px (1:3)
+ * and render at 1:2 (3/4 the width, same height).
+ * Upload: img0 = 800×1200 px (2:3) · imgs 1-4 = 600×1200 px (1:2)
  */
 function GridB({imgs}: {imgs: GridImage[]}) {
   return (
     <div className="dg-b">
       {imgs[0] && <Cell img={imgs[0]} w={1000} eager cls="dg-wide" hint="800 × 1200 px" />}
-      {imgs[1] && <Cell img={imgs[1]} w={500}              hint="400 × 1200 px" />}
-      {imgs[2] && <Cell img={imgs[2]} w={500}              hint="400 × 1200 px" />}
-      {imgs[3] && <Cell img={imgs[3]} w={500}              hint="400 × 1200 px" />}
-      {imgs[4] && <Cell img={imgs[4]} w={500}              hint="400 × 1200 px" />}
+      {imgs[1] && <Cell img={imgs[1]} w={600}              hint="600 × 1200 px" />}
+      {imgs[2] && <Cell img={imgs[2]} w={600}              hint="600 × 1200 px" />}
+      {imgs[3] && <Cell img={imgs[3]} w={600}              hint="600 × 1200 px" />}
+      {imgs[4] && <Cell img={imgs[4]} w={600}              hint="600 × 1200 px" />}
     </div>
   )
 }
@@ -222,31 +203,30 @@ function GridC({imgs}: {imgs: GridImage[]}) {
   )
 }
 
-/* ── Grid D · portrait-first mosaic (10 images) ──────────────────────────
+/* ── Grid D · 4-col square grid (12 images) ──────────────────────────────
  *
- * Base cell: 1:1 square.  d0 + d2 span 2 rows → render at 1:2 tall portrait.
+ * [ 0 ] [ 1 ] [ 2 ] [ 3 ]   row 1
+ * [ 4 ] [ 5 ] [ 6 ] [ 7 ]   row 2
+ * [ 8 ] [ 9 ] [10 ] [11 ]   row 3
  *
- * [ d0 tall ] [ d1 sq ] [ d2 tall ] [ d3 sq ]   row 1
- * [ d0      ] [ d4 sq ] [ d2      ] [ d5 sq ]   row 2
- * [ d6 sq ] [ d7 sq ] [ d8 sq ] [ d9 sq ]        row 3
- *
- * Upload: d0, d2 = 600×1200 px (1:2) · all others = 600×600 px (1:1)
+ * Upload: all 12 = 600×600 px (1:1)
  */
 function GridD({imgs}: {imgs: GridImage[]}) {
-  const TALL = '600 × 1200 px'
-  const SQ   = '600 × 600 px'
+  const SQ = '600 × 600 px'
   return (
     <div className="dg-d">
-      {imgs[0] && <Cell img={imgs[0]} w={600}  eager cls="dg-d0" hint={TALL} />}
-      {imgs[1] && <Cell img={imgs[1]} w={600}        cls="dg-d1" hint={SQ}   />}
-      {imgs[2] && <Cell img={imgs[2]} w={600}        cls="dg-d2" hint={TALL} />}
-      {imgs[3] && <Cell img={imgs[3]} w={600}        cls="dg-d3" hint={SQ}   />}
-      {imgs[4] && <Cell img={imgs[4]} w={600}        cls="dg-d4" hint={SQ}   />}
-      {imgs[5] && <Cell img={imgs[5]} w={600}        cls="dg-d5" hint={SQ}   />}
-      {imgs[6] && <Cell img={imgs[6]} w={600}        cls="dg-d6" hint={SQ}   />}
-      {imgs[7] && <Cell img={imgs[7]} w={600}        cls="dg-d7" hint={SQ}   />}
-      {imgs[8] && <Cell img={imgs[8]} w={600}        cls="dg-d8" hint={SQ}   />}
-      {imgs[9] && <Cell img={imgs[9]} w={600}        cls="dg-d9" hint={SQ}   />}
+      {imgs[0]  && <Cell img={imgs[0]}  w={600} eager hint={SQ} />}
+      {imgs[1]  && <Cell img={imgs[1]}  w={600}       hint={SQ} />}
+      {imgs[2]  && <Cell img={imgs[2]}  w={600}       hint={SQ} />}
+      {imgs[3]  && <Cell img={imgs[3]}  w={600}       hint={SQ} />}
+      {imgs[4]  && <Cell img={imgs[4]}  w={600}       hint={SQ} />}
+      {imgs[5]  && <Cell img={imgs[5]}  w={600}       hint={SQ} />}
+      {imgs[6]  && <Cell img={imgs[6]}  w={600}       hint={SQ} />}
+      {imgs[7]  && <Cell img={imgs[7]}  w={600}       hint={SQ} />}
+      {imgs[8]  && <Cell img={imgs[8]}  w={600}       hint={SQ} />}
+      {imgs[9]  && <Cell img={imgs[9]}  w={600}       hint={SQ} />}
+      {imgs[10] && <Cell img={imgs[10]} w={600}       hint={SQ} />}
+      {imgs[11] && <Cell img={imgs[11]} w={600}       hint={SQ} />}
     </div>
   )
 }
