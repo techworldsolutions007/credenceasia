@@ -160,7 +160,7 @@ export default function HomeHero({data}: {data: HomePageData}) {
                 </div>
               ))}
             </dl>
-
+  
             <div className="hh-proof mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 type-eyebrow text-soil/80">
               <span className="text-soil/60">Certified</span>
               {CERTS.map((cert) => (

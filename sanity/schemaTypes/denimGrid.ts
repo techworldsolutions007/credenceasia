@@ -26,7 +26,7 @@ export const denimGrid = defineType({
             value: 'B',
           },
           {
-            title: 'Grid C — Bento: 2×2 hero + 1×2 portrait + 4 squares + 2×1 wide (7 images)',
+            title: 'Grid C — Bento: 4 tall portraits (row 1) + 2 squares + 2×1 wide + 1 square (8 images)',
             value: 'C',
           },
           {
@@ -43,6 +43,28 @@ export const denimGrid = defineType({
       initialValue: 'A',
     }),
     defineField({
+      name: 'order',
+      title: 'Display Order',
+      type: 'number',
+      description: 'Lower numbers appear first. Set 1 to show this grid at the top.',
+      initialValue: 99,
+      validation: (Rule) =>
+        Rule.custom(async (value, context) => {
+          if (value === undefined || value === null) return true
+          const {document, getClient} = context as any
+          const client = getClient({apiVersion: '2024-01-01'})
+          const clash = await client.fetch<{_id: string; title?: string; layout?: string}[]>(
+            `*[_type == "denimGrid" && order == $order && _id != $id]{_id, title, layout}`,
+            {order: value, id: document?._id ?? ''},
+          )
+          if (clash.length === 0) return true
+          const label = clash[0].title
+            ? `"${clash[0].title}" (Grid ${clash[0].layout ?? '?'})`
+            : `Grid ${clash[0].layout ?? clash[0]._id}`
+          return `Order ${value} is already used by ${label}. Pick a different number.`
+        }),
+    }),
+    defineField({
       name: 'published',
       title: 'Published',
       type: 'boolean',
@@ -54,7 +76,7 @@ export const denimGrid = defineType({
       title: 'Images',
       type: 'array',
       description:
-        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 7 imgs (bento) · Grid D: 12 imgs (4×3 squares) · Grid E: 5 imgs',
+        'Grid A: 9 imgs · Grid B: 5 imgs · Grid C: 8 imgs (bento) · Grid D: 12 imgs (4×3 squares) · Grid E: 5 imgs',
       of: [
         {
           type: 'object',
