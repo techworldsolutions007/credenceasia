@@ -53,10 +53,10 @@ export const denimGrid = defineType({
           if (value === undefined || value === null) return true
           const {document, getClient} = context as any
           const client = getClient({apiVersion: '2024-01-01'})
-          const clash = await client.fetch<{_id: string; title?: string; layout?: string}[]>(
+          const clash = (await client.fetch(
             `*[_type == "denimGrid" && order == $order && _id != $id]{_id, title, layout}`,
             {order: value, id: document?._id ?? ''},
-          )
+          )) as {_id: string; title?: string; layout?: string}[]
           if (clash.length === 0) return true
           const label = clash[0].title
             ? `"${clash[0].title}" (Grid ${clash[0].layout ?? '?'})`
