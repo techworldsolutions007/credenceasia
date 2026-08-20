@@ -38,28 +38,16 @@ const CSS = `
 .dg-b .dg-wide{aspect-ratio:2/3}
 .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
 
-/* GRID C — bento mosaic (8 imgs, 4 cols × 3 rows)
-   1×1 square cells drive row height = col-width.
-   Spanning cells fill their tracks naturally.
+/* GRID C — 4-col square grid (8 imgs, 4 cols × 2 rows)
+   All cells 1:1 square, auto-flow.
    ┌───────┬───────┬───────┬───────┐
-   │c0(1×2)│cn(1×2)│c1(1×2)│  c2   │
-   │       │       │       ├───────┤
-   │       │       │       │  c3   │
-   ├───────┴───────┴───────┴───────┤
-   │  c4   │   c5  (2×1)   │  c6   │
-   └───────┴───────────────┴───────┘
-   Upload: c0,cn,c1 = 600×1200 px (1:2) · c2,c3,c4,c6 = 600×600 px (1:1)
-           c5 = 1200×600 px (2:1) */
+   │  c0   │  cn   │  c1   │  c2   │
+   ├───────┼───────┼───────┼───────┤
+   │  c3   │  c4   │  c5   │  c6   │
+   └───────┴───────┴───────┴───────┘
+   Upload: all 8 = 600×600 px (1:1) */
 .dg-c{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,.8vw,10px)}
-.dg-c2,.dg-c3,.dg-c4,.dg-c6{aspect-ratio:1/1}
-.dg-c0{grid-column:1;grid-row:1/3}
-.dg-cn{grid-column:2;grid-row:1/3}
-.dg-c1{grid-column:3;grid-row:1/3}
-.dg-c2{grid-column:4;grid-row:1}
-.dg-c3{grid-column:4;grid-row:2}
-.dg-c4{grid-column:1;grid-row:3}
-.dg-c5{grid-column:2/4;grid-row:3}
-.dg-c6{grid-column:4;grid-row:3}
+.dg-c .dg-cell{aspect-ratio:1/1}
 
 /* GRID D — 4-col square grid (12 imgs)
    All cells equal 1:1.  Auto-flow fills 3 rows of 4.
@@ -91,7 +79,6 @@ const CSS = `
   .dg-b{grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr}
   .dg-b .dg-cell:not(.dg-wide){aspect-ratio:1/2}
   .dg-c{grid-template-columns:repeat(2,1fr)}
-  .dg-c0,.dg-cn,.dg-c1,.dg-c2,.dg-c3,.dg-c4,.dg-c5,.dg-c6{grid-column:auto;grid-row:auto;aspect-ratio:1/1}
   .dg-d{grid-template-columns:repeat(4,1fr)}
   .dg-e{grid-template-columns:1fr 1fr}
   .dg-e .dg-e5{grid-column:1/-1}
@@ -195,14 +182,14 @@ function GridB({imgs}: {imgs: GridImage[]}) {
 function GridC({imgs}: {imgs: GridImage[]}) {
   return (
     <div className="dg-c">
-      {imgs[0] && <Cell img={imgs[0]} w={600}  eager cls="dg-c0" hint="600 × 1200 px"  />}
-      {imgs[7] && <Cell img={imgs[7]} w={600}        cls="dg-cn" hint="600 × 1200 px"  />}
-      {imgs[1] && <Cell img={imgs[1]} w={600}        cls="dg-c1" hint="600 × 1200 px"  />}
-      {imgs[2] && <Cell img={imgs[2]} w={600}        cls="dg-c2" hint="600 × 600 px"   />}
-      {imgs[3] && <Cell img={imgs[3]} w={600}        cls="dg-c3" hint="600 × 600 px"   />}
-      {imgs[4] && <Cell img={imgs[4]} w={600}        cls="dg-c4" hint="600 × 600 px"   />}
-      {imgs[5] && <Cell img={imgs[5]} w={1200}       cls="dg-c5" hint="1200 × 600 px"  />}
-      {imgs[6] && <Cell img={imgs[6]} w={600}        cls="dg-c6" hint="600 × 600 px"   />}
+      {imgs[0] && <Cell img={imgs[0]} w={600}  eager cls="dg-c0" hint="600 × 600 px" />}
+      {imgs[7] && <Cell img={imgs[7]} w={600}        cls="dg-cn" hint="600 × 600 px" />}
+      {imgs[1] && <Cell img={imgs[1]} w={600}        cls="dg-c1" hint="600 × 600 px" />}
+      {imgs[2] && <Cell img={imgs[2]} w={600}        cls="dg-c2" hint="600 × 600 px" />}
+      {imgs[3] && <Cell img={imgs[3]} w={600}        cls="dg-c3" hint="600 × 600 px" />}
+      {imgs[4] && <Cell img={imgs[4]} w={600}        cls="dg-c4" hint="600 × 600 px" />}
+      {imgs[5] && <Cell img={imgs[5]} w={600}        cls="dg-c5" hint="600 × 600 px" />}
+      {imgs[6] && <Cell img={imgs[6]} w={600}        cls="dg-c6" hint="600 × 600 px" />}
     </div>
   )
 }
