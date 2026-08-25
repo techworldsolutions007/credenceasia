@@ -6,7 +6,7 @@ import AnimateIn from '@/components/shared/AnimateIn'
 // ── Verified production statistics ────────────────────────────────────────────
 const STATS = [
   { value: '2016',   label: 'Founded',                sub: 'Hong Kong' },
-  { value: '6+',     label: 'Production countries',   sub: 'Asia network' },
+  { value: '7+',     label: 'Production countries',   sub: 'Asia network' },
   { value: '14M+',   label: 'Pieces per year',        sub: 'Combined capacity' },
   { value: '3,700+', label: 'Workers',                sub: 'Bangladesh alone' },
 ]

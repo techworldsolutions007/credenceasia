@@ -88,7 +88,7 @@ export default function AboutFeatureGrid() {
             {[
               {label: 'Founded', value: '2016'},
               {label: 'Headquarters', value: 'Hong Kong'},
-              {label: 'Countries', value: '6+'},
+              {label: 'Countries', value: '7+'},
               {label: 'Units / year', value: '14 M+'},
             ].map((s) => (
               <div key={s.label}>
@@ -116,7 +116,7 @@ export default function AboutFeatureGrid() {
 
           <div className="flex flex-col gap-4">
             <p className="max-w-[44ch] type-body text-charcoal/70">
-              Design, sampling, production, QC and logistics across six
+              Design, sampling, production, QC and logistics across seven
               countries, managed from Hong Kong with full transparency at
               every stage.
             </p>

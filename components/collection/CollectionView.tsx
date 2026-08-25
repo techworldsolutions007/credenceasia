@@ -29,7 +29,7 @@ export default function CollectionView({categories, grids}: Props) {
       <style>{`
         @keyframes ca-marquee {
           from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
+          to   { transform: translateX(-25%); }
         }
       `}</style>
 
@@ -45,8 +45,9 @@ export default function CollectionView({categories, grids}: Props) {
           display: 'flex',
           width: 'max-content',
           animation: 'ca-marquee 36s linear infinite',
+          willChange: 'transform',
         }}>
-          {[0, 1].map((pass) =>
+          {[0, 1, 2, 3].map((pass) =>
             categories.map((cat) => (
               <span
                 key={`${pass}-${cat._id}`}

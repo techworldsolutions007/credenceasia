@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import {client} from '@/sanity/lib/client'
 import {contactPageQuery} from '@/sanity/lib/queries'
-import ContactForm from './ContactForm'
 import AnimateIn from '@/components/shared/AnimateIn'
 
 export const revalidate = 60
@@ -12,13 +11,20 @@ export const metadata: Metadata = {
     'Contact Credence Asia Group. Operational hub in Hong Kong and design hub in Copenhagen, one team handling sourcing, product development and production.',
 }
 
-const OFFICE_ADDRESS = 'Unit 608, 8/F, Hope Sea Industrial Centre\n26 Lam Hing Street, Kowloon Bay\nKowloon, Hong Kong'
-const OFFICE_PHONE   = '+852 2650 0058'
+const CONTACT_EMAIL    = 'contact@credenceasialtd.com'
+const OFFICE_ADDRESS   = 'Unit 608, 8/F, Hope Sea Industrial Centre\n26 Lam Hing Street, Kowloon Bay\nKowloon, Hong Kong'
+const OFFICE_PHONE     = '+852 2650 0058'
 const OFFICE_PHONE_HREF = '+85226500058'
 
 const MAP_QUERY = encodeURIComponent('Hope Sea Industrial Centre, 26 Lam Hing Street, Kowloon Bay, Hong Kong')
 const MAP_EMBED = `https://maps.google.com/maps?q=${MAP_QUERY}&t=&z=15&ie=UTF8&iwloc=&output=embed`
 const MAP_LINK  = `https://maps.google.com/?q=${MAP_QUERY}`
+
+const EMAIL_SUBJECT = encodeURIComponent('Sourcing Enquiry – [Your Company]')
+const EMAIL_BODY    = encodeURIComponent(
+  `Hi Credence Asia Team,\n\nI am reaching out to discuss a potential sourcing / product development enquiry.\n\nCompany:\nProduct Category:\nApproximate Quantity:\nTarget Delivery:\nBudget Range:\n\nDetails / Brief:\n\n\nKind regards,\n[Your Name]\n[Your Phone]`,
+)
+const MAILTO_HREF = `mailto:${CONTACT_EMAIL}?subject=${EMAIL_SUBJECT}&body=${EMAIL_BODY}`
 
 export default async function ContactPage() {
   const data = await client.fetch(contactPageQuery).catch(() => null)
@@ -49,54 +55,90 @@ export default async function ContactPage() {
               {data?.introText ??
                 'Share your sourcing, product development or production requirements.'}
             </p>
-            <p className="mt-3 type-label text-soil/70">
-              We reply within 2 business days
-            </p>
           </AnimateIn>
         </div>
       </section>
 
-      {/* Enquiry form + map */}
+      {/* Email CTA + map */}
       <section className="bg-cream py-24 md:py-36">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-6 md:grid-cols-[5fr_6fr] md:gap-20 md:px-10">
-          <div>
-            <AnimateIn>
-              <p className="type-eyebrow mb-6 text-clay">Send an enquiry</p>
-              <h2 className="type-h2 mb-8 text-charcoal">
-                Brief us on your program.
-              </h2>
-            </AnimateIn>
-            <AnimateIn delay={0.1}><ContactForm /></AnimateIn>
-          </div>
 
-          <div className="flex flex-col gap-8">
-            {/* Contact info — no names */}
-            <AnimateIn>
-              <div className="border-l-2 border-clay/30 pl-6 flex flex-col gap-4">
-                <p className="type-eyebrow text-clay">Get in touch</p>
+          {/* Left — email block */}
+          <AnimateIn>
+            <div className="flex flex-col gap-10">
+              <div>
+                <p className="type-eyebrow mb-4 text-clay">Get in touch</p>
+                <h2 className="type-h2 mb-4 text-charcoal">
+                  Let's talk.
+                </h2>
+                <p className="max-w-[38ch] type-body text-charcoal/65">
+                  Reach out and we'll get back to you.
+                </p>
+              </div>
+
+              {/* Email address display */}
+              <div className="flex flex-col gap-3">
+                <p className="type-eyebrow text-soil/50">Email</p>
                 <a
-                  href="mailto:contact@credenceasialtd.com"
+                  href={MAILTO_HREF}
+                  className="group inline-flex items-center gap-3 type-h3 text-charcoal transition-colors duration-200 hover:text-soil break-all"
+                  aria-label="Send an email to Credence Asia"
+                >
+                  {CONTACT_EMAIL}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="shrink-0 opacity-40 transition-opacity group-hover:opacity-100"
+                    aria-hidden
+                  >
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                  </svg>
+                </a>
+                <div aria-hidden className="h-px w-12 bg-clay/30 mt-1" />
+              </div>
+
+              {/* CTA button */}
+              <div>
+                <a
+                  href={MAILTO_HREF}
+                  className="inline-flex h-12 items-center bg-soil px-8 type-label text-ivory transition-colors duration-300 hover:bg-moss focus-visible:outline focus-visible:outline-2 focus-visible:outline-soil"
+                >
+                  Send us an email
+                </a>
+                <p className="mt-4 type-label text-soil/40">
+                  We reply within 2 business days.
+                </p>
+              </div>
+
+              {/* Phone numbers */}
+              <div className="border-l-2 border-clay/30 pl-6 flex flex-col gap-3">
+                <p className="type-eyebrow text-clay">Phone</p>
+                <a
+                  href="tel:+85261005224"
                   className="type-small text-charcoal/80 transition-colors hover:text-soil"
                 >
-                  contact@credenceasialtd.com
+                  +852 6100 5224
                 </a>
-                <div className="flex flex-col gap-2">
-                  <a
-                    href="tel:+85261005224"
-                    className="type-small text-charcoal/80 transition-colors hover:text-soil"
-                  >
-                    +852 6100 5224
-                  </a>
-                  <a
-                    href="tel:+85292854595"
-                    className="type-small text-charcoal/80 transition-colors hover:text-soil"
-                  >
-                    +852 9285 4595
-                  </a>
-                </div>
+                <a
+                  href="tel:+85292854595"
+                  className="type-small text-charcoal/80 transition-colors hover:text-soil"
+                >
+                  +852 9285 4595
+                </a>
               </div>
-            </AnimateIn>
+            </div>
+          </AnimateIn>
 
+          {/* Right — offices + map */}
+          <div className="flex flex-col gap-8">
             {/* Office locations */}
             <div className="grid grid-cols-1 gap-px bg-beige/40 sm:grid-cols-2">
               <div className="bg-cream p-6">
