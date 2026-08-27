@@ -11,9 +11,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 type Props = {
   aboutText?: string
-  aboutImage?: unknown
   aboutTitle?: string
-  aboutPoints?: unknown
 }
 
 export default function WhoWeAre({aboutText}: Props) {

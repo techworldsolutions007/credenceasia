@@ -115,7 +115,7 @@ export default async function SustainabilityPage() {
               alt=""
               fill
               sizes="100vw"
-              unoptimized
+
               className="object-cover"
             />
           </div>

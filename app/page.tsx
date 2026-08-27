@@ -41,8 +41,6 @@ export default async function HomePage() {
       <WhoWeAre
         aboutTitle={homePage?.aboutTitle}
         aboutText={homePage?.aboutText}
-        aboutImage={homePage?.aboutImage}
-        aboutPoints={homePage?.aboutPoints}
       />
       <ProductionMapSection countries={countries} />
       <OurApproach />
