@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 const NAV_LINKS = [
-  {label: 'Capabilities', href: '/collection'},
+  {label: 'Collection', href: '/collection'},
   {label: 'Network',      href: '/about#network'},
   {label: 'Sustainability', href: '/sustainability'},
   {label: 'About',        href: '/about'},
