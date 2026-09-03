@@ -67,13 +67,23 @@ export default function PageLoaderVideo() {
         return
       }
 
-      gsap.set(logoRef.current, { autoAlpha: 0, y: 14 })
-      let logoShown = false
+      const isMobile = window.matchMedia('(max-width: 639px)').matches
+      // On mobile the logo is left at its default visible state from render —
+      // no GSAP set means no flicker between initial paint and the effect running.
+      if (!isMobile) {
+        gsap.set(logoRef.current, { autoAlpha: 0, y: 14 })
+      }
+      let logoShown = isMobile
 
       const revealSite = () => {
-        gsap.timeline({ onComplete: finish })
-          .to(logoRef.current, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' })
-          .to({}, { duration: 0.25 })
+        const tl = gsap.timeline({ onComplete: finish })
+        // Desktop: fade logo in. Mobile: already visible, skip the tween entirely
+        // to avoid any re-animation glitch.
+        if (!isMobile) {
+          tl.to(logoRef.current, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+        }
+        // Hold so the logo has time to breathe before the panel lifts
+        tl.to({}, { duration: 0.75 })
           .to(el, { yPercent: -100, duration: 0.9, ease: 'power3.inOut' })
       }
 
