@@ -20,14 +20,9 @@ import { gsap } from 'gsap'
 */
 
 const VIDEO_SRC = '/intro.mp4'
-// Flip to true to show the intro only once per browser session instead of on
-// every hard refresh (matches the old loader's every-load behaviour when false).
 const PLAY_ONCE_PER_SESSION = true
 const SESSION_KEY = 'ca-intro-shown'
-// Safety net: reveal the site even if the video never fires `ended` / stalls.
-const FALLBACK_TIMEOUT_MS = 8500
-// When the wordmark fades in, measured from the end of the clip.
-const LOGO_LEAD_IN_S = 1.15
+const FALLBACK_TIMEOUT_MS = 10000
 
 export default function PageLoaderVideo() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -61,44 +56,26 @@ export default function PageLoaderVideo() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const ctx = gsap.context(() => {
-      // Reduced motion — don't autoplay a moving clip; hold the first frame briefly then reveal.
       if (reduced) {
         gsap.to(el, { autoAlpha: 0, duration: 0.4, delay: 0.5, onComplete: finish })
         return
       }
 
-      const isMobile = window.matchMedia('(max-width: 639px)').matches
-      // On mobile the logo is left at its default visible state from render —
-      // no GSAP set means no flicker between initial paint and the effect running.
-      if (!isMobile) {
-        gsap.set(logoRef.current, { autoAlpha: 0, y: 14 })
-      }
-      let logoShown = isMobile
+      // Logo fades in gently at the very start and stays visible throughout.
+      // opacity:0 / visibility:hidden set in the JSX prevents any flash before
+      // this effect runs, so there is no flicker.
+      gsap.to(logoRef.current, { autoAlpha: 1, duration: 0.55, ease: 'power2.out', delay: 0.15 })
 
       const revealSite = () => {
-        const tl = gsap.timeline({ onComplete: finish })
-        // Desktop: fade logo in. Mobile: already visible, skip the tween entirely
-        // to avoid any re-animation glitch.
-        if (!isMobile) {
-          tl.to(logoRef.current, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' })
-        }
-        // Hold so the logo has time to breathe before the panel lifts
-        tl.to({}, { duration: 0.75 })
+        gsap.timeline({ onComplete: finish })
+          // Hold so the logo is clearly visible before the panel lifts
+          .to({}, { duration: 1.4 })
           .to(el, { yPercent: -100, duration: 0.9, ease: 'power3.inOut' })
       }
 
-      const onTimeUpdate = () => {
-        if (!logoShown && video.duration && video.currentTime >= video.duration - LOGO_LEAD_IN_S) {
-          logoShown = true
-          gsap.to(logoRef.current, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' })
-        }
-      }
-
-      video.addEventListener('timeupdate', onTimeUpdate)
       video.addEventListener('ended', revealSite, { once: true })
       video.addEventListener('error', finish, { once: true })
 
-      // Kick off playback; if the browser blocks autoplay, don't trap the user.
       const p = video.play()
       if (p && typeof p.catch === 'function') {
         p.catch(() => { gsap.delayedCall(0.8, finish) })
@@ -112,7 +89,7 @@ export default function PageLoaderVideo() {
     }
   }, [skip])
 
-  if (gone) return null
+  if (skip || gone) return null
 
   return (
     <div
@@ -165,6 +142,8 @@ export default function PageLoaderVideo() {
           alignItems: 'center',
           justifyContent: 'center',
           pointerEvents: 'none',
+          opacity: 0,
+          visibility: 'hidden',
         }}
       >
         {/* Gentle light pool that lifts the black wordmark off the footage */}
