@@ -1,12 +1,12 @@
 import type {Metadata} from 'next'
 import {Outfit, Work_Sans} from 'next/font/google'
 import './globals.css'
+import dynamic from 'next/dynamic'
 import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
-// Opening animation. Video intro is active; the original CSS loader is kept
-// intact — to revert, swap this import (and the tag below) back to PageLoader.
-// import PageLoader from '@/components/PageLoader'
-import PageLoaderVideo from '@/components/PageLoaderVideo'
+// ssr:false keeps the loader purely client-side — no SSR HTML, no hydration
+// mismatch, and localStorage is safely readable on first render.
+const PageLoaderVideo = dynamic(() => import('@/components/PageLoaderVideo'), { ssr: false })
 import {client} from '@/sanity/lib/client'
 import {siteSettingsQuery} from '@/sanity/lib/queries'
 
