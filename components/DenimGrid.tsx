@@ -56,9 +56,9 @@ const CSS = `
 .dg-d .dg-cell{aspect-ratio:1/1}
 
 /* GRID E — 5 equal tall portraits (5 imgs)
-   Upload: all 5 = 600×900 px (2:3) */
+   Upload: all 5 = 600×800 px (3:4) */
 .dg-e{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(6px,.8vw,10px)}
-.dg-e .dg-cell{aspect-ratio:2/3}
+.dg-e .dg-cell{aspect-ratio:3/4}
 
 /* TABLET 640-1023px — fewer columns, aspect-ratios stay the same */
 @media(max-width:1023px) and (min-width:640px){
@@ -229,7 +229,7 @@ function GridD({imgs}: {imgs: GridImage[]}) {
  * Upload: all 5 = 600×900 px (2:3)
  */
 function GridE({imgs}: {imgs: GridImage[]}) {
-  const HINT = '600 × 900 px · 2:3'
+  const HINT = '600 × 800 px · 3:4'
   return (
     <div className="dg-e">
       {imgs[0] && <Cell img={imgs[0]} w={600} eager hint={HINT} />}
