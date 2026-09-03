@@ -6,12 +6,12 @@ import { gsap } from 'gsap'
 
 /*
   ─── Video opening animation ──────────────────────────────────────────────
-  Loaded with ssr:false (see app/layout.tsx) so this component is purely
-  client-side. That means:
-    • localStorage is available on the very first render — no hydration mismatch.
-    • The intro plays exactly once per browser (localStorage persists across
-      hard refreshes, new tabs, and sessions).
-    • Hard refresh → skips instantly, no overlay shown.
+  SSR-compatible: the overlay is always in the server HTML so there is zero
+  flash of the homepage on first load.
+
+  For returning visitors an inline <script> hides the container synchronously
+  before the first browser paint. React then fires useEffect which calls
+  setGone(true) and unmounts the overlay entirely.
 
   Skip behaviour:
     Desktop  — mouse wheel scroll OR any key press  → panel lifts immediately.
@@ -19,32 +19,38 @@ import { gsap } from 'gsap'
     Natural  — video ends                           → 1.4 s hold then lifts.
 */
 
-const VIDEO_SRC  = '/intro.mp4'
-const SEEN_KEY   = 'ca-intro-seen'   // localStorage key
+const VIDEO_SRC   = '/intro.mp4'
+const SEEN_KEY    = 'ca-intro-seen'
 const FALLBACK_MS = 10000
+
+// Inline script that runs synchronously before first paint.
+// Hides the overlay for returning visitors before React hydrates.
+const HIDE_SCRIPT =
+  `(function(){try{if(localStorage.getItem('ca-intro-seen')==='1'){` +
+  `var e=document.currentScript.parentElement;if(e)e.style.display='none';` +
+  `}}catch(r){}})()`
 
 export default function PageLoaderVideo() {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef     = useRef<HTMLVideoElement>(null)
   const logoRef      = useRef<HTMLDivElement>(null)
 
-  // Because this component is ssr:false, localStorage is always available here.
-  // Returning true synchronously means the component renders null on the very
-  // first render for returning visitors — zero flash of the dark overlay.
-  const [gone, setGone] = useState<boolean>(() => {
-    try {
-      const seen = localStorage.getItem(SEEN_KEY) === '1'
-      console.log('[IntroLoader] localStorage check —', seen ? 'already seen, skipping' : 'first visit, will play')
-      return seen
-    } catch (err) {
-      console.error('[IntroLoader] localStorage read failed:', err)
-      return false
-    }
+  // false during SSR (no window); true on client for returning visitors.
+  // Causes a style.display mismatch during hydration for returning visitors —
+  // suppressHydrationWarning on the container div suppresses the warning and
+  // the inline script already hid the div before React even loaded.
+  const [alreadySeen] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    try { return localStorage.getItem(SEEN_KEY) === '1' } catch { return false }
   })
 
+  const [gone, setGone] = useState<boolean>(false)
+
   useEffect(() => {
-    if (gone) {
-      console.log('[IntroLoader] skipped (already seen)')
+    // Returning visitor — dismiss immediately without playing anything.
+    if (alreadySeen) {
+      console.log('[IntroLoader] already seen — skipping instantly')
+      setGone(true)
       return
     }
 
@@ -55,13 +61,11 @@ export default function PageLoaderVideo() {
       return
     }
 
-    console.log('[IntroLoader] mounting intro, marking seen in localStorage')
+    console.log('[IntroLoader] first visit — marking seen and playing intro')
     try { localStorage.setItem(SEEN_KEY, '1') } catch (err) {
       console.error('[IntroLoader] localStorage write failed:', err)
     }
 
-    // Lock body scroll so the page cannot drift behind the overlay while it
-    // is visible. Also snap to top so the reveal always starts at position 0.
     document.body.style.overflow = 'hidden'
     window.scrollTo(0, 0)
 
@@ -70,12 +74,12 @@ export default function PageLoaderVideo() {
       if (finished) return
       finished = true
       document.body.style.overflow = ''
-      console.log('[IntroLoader] finish() called — removing overlay')
+      console.log('[IntroLoader] finish() — removing overlay')
       setGone(true)
     }
 
     const fallback = setTimeout(() => {
-      console.warn('[IntroLoader] fallback timeout fired — forcing reveal')
+      console.warn('[IntroLoader] fallback timeout fired')
       finish()
     }, FALLBACK_MS)
 
@@ -88,8 +92,6 @@ export default function PageLoaderVideo() {
       revealed = true
       console.log('[IntroLoader] doReveal —', quick ? 'quick skip' : 'natural end')
       video.removeEventListener('ended', onEnded)
-      // Snap back to top before the panel lifts so the homepage always
-      // appears at position 0 regardless of any scroll that snuck through.
       window.scrollTo(0, 0)
       gsap.timeline({ onComplete: finish })
         .to({}, { duration: quick ? 0.12 : 1.4 })
@@ -112,9 +114,6 @@ export default function PageLoaderVideo() {
         finish()
       }, { once: true })
 
-      // Any user interaction dismisses the intro:
-      // desktop — scroll wheel, key press, mouse click
-      // mobile  — tap (touchstart) or swipe (touchmove)
       window.addEventListener('wheel',      onSkip, { passive: true, once: true })
       window.addEventListener('keydown',    onSkip, { once: true })
       window.addEventListener('click',      onSkip, { once: true })
@@ -131,7 +130,7 @@ export default function PageLoaderVideo() {
     }, containerRef)
 
     return () => {
-      console.log('[IntroLoader] cleanup running')
+      console.log('[IntroLoader] cleanup')
       finished = true
       clearTimeout(fallback)
       document.body.style.overflow = ''
@@ -143,7 +142,7 @@ export default function PageLoaderVideo() {
       ctx.revert()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])   // run once on mount
+  }, [])
 
   if (gone) return null
 
@@ -151,14 +150,21 @@ export default function PageLoaderVideo() {
     <div
       ref={containerRef}
       aria-hidden="true"
+      suppressHydrationWarning
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 9999,
         backgroundColor: '#1C1A18',
         overflow: 'hidden',
+        // alreadySeen is true only on the client for returning visitors.
+        // This mismatches the server render (always false there) — suppressed above.
+        display: alreadySeen ? 'none' : undefined,
       }}
     >
+      {/* Hides the overlay for returning visitors before React hydrates */}
+      <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: HIDE_SCRIPT }} />
+
       <video
         ref={videoRef}
         src={VIDEO_SRC}
@@ -175,7 +181,7 @@ export default function PageLoaderVideo() {
         }}
       />
 
-      {/* Soft vignette + bottom scrim so the wordmark stays legible */}
+      {/* Vignette + bottom scrim */}
       <div
         aria-hidden="true"
         style={{
@@ -187,7 +193,7 @@ export default function PageLoaderVideo() {
         }}
       />
 
-      {/* Brand wordmark — visible throughout the clip */}
+      {/* Brand wordmark — fades in via GSAP at 0.15 s */}
       <div
         ref={logoRef}
         style={{
@@ -201,7 +207,6 @@ export default function PageLoaderVideo() {
           visibility: 'hidden',
         }}
       >
-        {/* Soft ivory glow pool behind the wordmark */}
         <div
           aria-hidden="true"
           style={{
