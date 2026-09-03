@@ -6,10 +6,10 @@ import Image from 'next/image'
 import {usePathname} from 'next/navigation'
 
 const NAV_LINKS = [
-  {label: 'Collection', href: '/collection'},
-  {label: 'Network', href: '/about#network'},
-  {label: 'Sustainability', href: '/sustainability'},
   {label: 'About', href: '/about'},
+  {label: 'Sustainability', href: '/sustainability'},
+  {label: 'Network', href: '/about#network'},
+  {label: 'Collection', href: '/collection'},
   {label: 'Contact', href: '/contact'},
 ]
 
