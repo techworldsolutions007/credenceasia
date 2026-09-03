@@ -60,10 +60,16 @@ export default function PageLoaderVideo() {
       console.error('[IntroLoader] localStorage write failed:', err)
     }
 
+    // Lock body scroll so the page cannot drift behind the overlay while it
+    // is visible. Also snap to top so the reveal always starts at position 0.
+    document.body.style.overflow = 'hidden'
+    window.scrollTo(0, 0)
+
     let finished = false
     const finish = () => {
       if (finished) return
       finished = true
+      document.body.style.overflow = ''
       console.log('[IntroLoader] finish() called — removing overlay')
       setGone(true)
     }
@@ -82,6 +88,9 @@ export default function PageLoaderVideo() {
       revealed = true
       console.log('[IntroLoader] doReveal —', quick ? 'quick skip' : 'natural end')
       video.removeEventListener('ended', onEnded)
+      // Snap back to top before the panel lifts so the homepage always
+      // appears at position 0 regardless of any scroll that snuck through.
+      window.scrollTo(0, 0)
       gsap.timeline({ onComplete: finish })
         .to({}, { duration: quick ? 0.12 : 1.4 })
         .to(el,  { yPercent: -100, duration: 0.9, ease: 'power3.inOut' })
@@ -120,6 +129,7 @@ export default function PageLoaderVideo() {
       console.log('[IntroLoader] cleanup running')
       finished = true
       clearTimeout(fallback)
+      document.body.style.overflow = ''
       window.removeEventListener('wheel',     onSkip)
       window.removeEventListener('keydown',   onSkip)
       window.removeEventListener('touchmove', onSkip)
