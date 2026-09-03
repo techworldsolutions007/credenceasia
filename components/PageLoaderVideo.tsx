@@ -69,6 +69,11 @@ export default function PageLoaderVideo() {
     document.body.style.overflow = 'hidden'
     window.scrollTo(0, 0)
 
+    // iOS Safari ignores overflow:hidden on body for touch-scroll.
+    // Blocking touchmove directly on the overlay is the reliable fix.
+    const blockTouchScroll = (e: TouchEvent) => e.preventDefault()
+    el.addEventListener('touchmove', blockTouchScroll, { passive: false })
+
     let finished = false
     const finish = () => {
       if (finished) return
@@ -134,6 +139,7 @@ export default function PageLoaderVideo() {
       finished = true
       clearTimeout(fallback)
       document.body.style.overflow = ''
+      el.removeEventListener('touchmove', blockTouchScroll)
       window.removeEventListener('wheel',      onSkip)
       window.removeEventListener('keydown',    onSkip)
       window.removeEventListener('click',      onSkip)
@@ -157,6 +163,7 @@ export default function PageLoaderVideo() {
         zIndex: 9999,
         backgroundColor: '#1C1A18',
         overflow: 'hidden',
+        touchAction: 'none',
         // alreadySeen is true only on the client for returning visitors.
         // This mismatches the server render (always false there) — suppressed above.
         display: alreadySeen ? 'none' : undefined,
