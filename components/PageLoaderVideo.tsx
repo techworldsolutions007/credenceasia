@@ -55,26 +55,39 @@ export default function PageLoaderVideo() {
     const fallback = setTimeout(finish, FALLBACK_TIMEOUT_MS)
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+    // ── Skip-on-interaction ─────────────────────────────────────────────────
+    // Defined outside gsap.context so cleanup can remove the window listeners.
+    let revealed = false
+    const doReveal = (quick: boolean) => {
+      if (revealed) return
+      revealed = true
+      video.removeEventListener('ended', onEnded)
+      gsap.timeline({ onComplete: finish })
+        // Quick skip: near-instant lift. Natural end: hold 1.4 s then lift.
+        .to({}, { duration: quick ? 0.12 : 1.4 })
+        .to(el, { yPercent: -100, duration: 0.9, ease: 'power3.inOut' })
+    }
+    const onEnded = () => doReveal(false)
+    const onSkip  = () => doReveal(true)
+    // ───────────────────────────────────────────────────────────────────────
+
     const ctx = gsap.context(() => {
       if (reduced) {
         gsap.to(el, { autoAlpha: 0, duration: 0.4, delay: 0.5, onComplete: finish })
         return
       }
 
-      // Logo fades in gently at the very start and stays visible throughout.
-      // opacity:0 / visibility:hidden set in the JSX prevents any flash before
-      // this effect runs, so there is no flicker.
+      // Logo fades in at the very start and stays visible throughout.
       gsap.to(logoRef.current, { autoAlpha: 1, duration: 0.55, ease: 'power2.out', delay: 0.15 })
 
-      const revealSite = () => {
-        gsap.timeline({ onComplete: finish })
-          // Hold so the logo is clearly visible before the panel lifts
-          .to({}, { duration: 1.4 })
-          .to(el, { yPercent: -100, duration: 0.9, ease: 'power3.inOut' })
-      }
+      video.addEventListener('ended', onEnded, { once: true })
+      video.addEventListener('error', finish,   { once: true })
 
-      video.addEventListener('ended', revealSite, { once: true })
-      video.addEventListener('error', finish, { once: true })
+      // Desktop: wheel scroll or any key press skips the intro
+      window.addEventListener('wheel',   onSkip, { passive: true, once: true })
+      window.addEventListener('keydown', onSkip, { once: true })
+      // Mobile: first touch-move (swipe) skips the intro
+      window.addEventListener('touchmove', onSkip, { passive: true, once: true })
 
       const p = video.play()
       if (p && typeof p.catch === 'function') {
@@ -85,6 +98,9 @@ export default function PageLoaderVideo() {
     return () => {
       finished = true
       clearTimeout(fallback)
+      window.removeEventListener('wheel',     onSkip)
+      window.removeEventListener('keydown',   onSkip)
+      window.removeEventListener('touchmove', onSkip)
       ctx.revert()
     }
   }, [skip])
