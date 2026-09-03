@@ -112,9 +112,14 @@ export default function PageLoaderVideo() {
         finish()
       }, { once: true })
 
-      window.addEventListener('wheel',     onSkip, { passive: true, once: true })
-      window.addEventListener('keydown',   onSkip, { once: true })
-      window.addEventListener('touchmove', onSkip, { passive: true, once: true })
+      // Any user interaction dismisses the intro:
+      // desktop — scroll wheel, key press, mouse click
+      // mobile  — tap (touchstart) or swipe (touchmove)
+      window.addEventListener('wheel',      onSkip, { passive: true, once: true })
+      window.addEventListener('keydown',    onSkip, { once: true })
+      window.addEventListener('click',      onSkip, { once: true })
+      window.addEventListener('touchstart', onSkip, { passive: true, once: true })
+      window.addEventListener('touchmove',  onSkip, { passive: true, once: true })
 
       const p = video.play()
       if (p && typeof p.catch === 'function') {
@@ -130,9 +135,11 @@ export default function PageLoaderVideo() {
       finished = true
       clearTimeout(fallback)
       document.body.style.overflow = ''
-      window.removeEventListener('wheel',     onSkip)
-      window.removeEventListener('keydown',   onSkip)
-      window.removeEventListener('touchmove', onSkip)
+      window.removeEventListener('wheel',      onSkip)
+      window.removeEventListener('keydown',    onSkip)
+      window.removeEventListener('click',      onSkip)
+      window.removeEventListener('touchstart', onSkip)
+      window.removeEventListener('touchmove',  onSkip)
       ctx.revert()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
