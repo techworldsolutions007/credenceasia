@@ -204,11 +204,11 @@ import {ChevronLeft, ChevronRight, Menu, X} from 'lucide-react'
 type HomePageData = {heroImage?: any} | null
 
 const NAV_LINKS = [
-  {label: 'Collection',   href: '/collection'},
-  {label: 'Network',      href: '/about#network'},
+  {label: 'About',          href: '/about'},
   {label: 'Sustainability', href: '/sustainability'},
-  {label: 'About',        href: '/about'},
-  {label: 'Contact',      href: '/contact'},
+  {label: 'Network',        href: '/about#network'},
+  {label: 'Collection',     href: '/collection'},
+  {label: 'Contact',        href: '/contact'},
 ]
 
 // `src` is the wide desktop image; `mobileSrc` is an art-directed portrait (9:16)
