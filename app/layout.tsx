@@ -1,12 +1,9 @@
 import type {Metadata} from 'next'
 import {Outfit, Work_Sans} from 'next/font/google'
 import './globals.css'
-import dynamic from 'next/dynamic'
 import Footer from '@/components/Footer'
 import SmoothScroll from '@/components/SmoothScroll'
-// ssr:false keeps the loader purely client-side — no SSR HTML, no hydration
-// mismatch, and localStorage is safely readable on first render.
-const PageLoaderVideo = dynamic(() => import('@/components/PageLoaderVideo'), { ssr: false })
+import IntroLoader from '@/components/IntroLoader'
 import {client} from '@/sanity/lib/client'
 import {siteSettingsQuery} from '@/sanity/lib/queries'
 
@@ -37,7 +34,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
       className={`${outfit.variable} ${workSans.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-ivory text-charcoal">
-        <PageLoaderVideo />
+        <IntroLoader />
         <SmoothScroll>
           {children}
           <Footer settings={settings} />

@@ -32,42 +32,62 @@ export default function PageLoaderVideo() {
   // Returning true synchronously means the component renders null on the very
   // first render for returning visitors — zero flash of the dark overlay.
   const [gone, setGone] = useState<boolean>(() => {
-    try { return localStorage.getItem(SEEN_KEY) === '1' } catch { return false }
+    try {
+      const seen = localStorage.getItem(SEEN_KEY) === '1'
+      console.log('[IntroLoader] localStorage check —', seen ? 'already seen, skipping' : 'first visit, will play')
+      return seen
+    } catch (err) {
+      console.error('[IntroLoader] localStorage read failed:', err)
+      return false
+    }
   })
 
   useEffect(() => {
-    if (gone) return  // returning visitor — nothing to do
+    if (gone) {
+      console.log('[IntroLoader] skipped (already seen)')
+      return
+    }
 
     const el    = containerRef.current
     const video = videoRef.current
-    if (!el || !video) return
+    if (!el || !video) {
+      console.error('[IntroLoader] refs not ready — el:', el, 'video:', video)
+      return
+    }
 
-    // Mark as seen immediately so any hard refresh / new tab skips the intro.
-    try { localStorage.setItem(SEEN_KEY, '1') } catch { /* ignore */ }
+    console.log('[IntroLoader] mounting intro, marking seen in localStorage')
+    try { localStorage.setItem(SEEN_KEY, '1') } catch (err) {
+      console.error('[IntroLoader] localStorage write failed:', err)
+    }
 
     let finished = false
     const finish = () => {
       if (finished) return
       finished = true
+      console.log('[IntroLoader] finish() called — removing overlay')
       setGone(true)
     }
 
-    const fallback = setTimeout(finish, FALLBACK_MS)
-    const reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const fallback = setTimeout(() => {
+      console.warn('[IntroLoader] fallback timeout fired — forcing reveal')
+      finish()
+    }, FALLBACK_MS)
 
-    // ── Skip-on-interaction ───────────────────────────────────────────────
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    console.log('[IntroLoader] reduced-motion:', reduced)
+
     let revealed = false
     const doReveal = (quick: boolean) => {
       if (revealed) return
       revealed = true
+      console.log('[IntroLoader] doReveal —', quick ? 'quick skip' : 'natural end')
       video.removeEventListener('ended', onEnded)
       gsap.timeline({ onComplete: finish })
         .to({}, { duration: quick ? 0.12 : 1.4 })
         .to(el,  { yPercent: -100, duration: 0.9, ease: 'power3.inOut' })
     }
-    const onEnded = () => doReveal(false)
-    const onSkip  = () => doReveal(true)
-    // ─────────────────────────────────────────────────────────────────────
+    const onEnded = () => { console.log('[IntroLoader] video ended'); doReveal(false) }
+    const onSkip  = () => { console.log('[IntroLoader] user skipped'); doReveal(true) }
 
     const ctx = gsap.context(() => {
       if (reduced) {
@@ -75,27 +95,29 @@ export default function PageLoaderVideo() {
         return
       }
 
-      // Logo fades in at the very start and remains visible for the whole clip.
-      // The element starts at opacity:0 / visibility:hidden (set in JSX) so
-      // there is no flash before this tween runs.
       gsap.to(logoRef.current, { autoAlpha: 1, duration: 0.55, ease: 'power2.out', delay: 0.15 })
 
       video.addEventListener('ended', onEnded, { once: true })
-      video.addEventListener('error', finish,   { once: true })
+      video.addEventListener('error', (e) => {
+        console.error('[IntroLoader] video error:', e)
+        finish()
+      }, { once: true })
 
-      // Desktop: wheel or key press skips
-      window.addEventListener('wheel',   onSkip, { passive: true, once: true })
-      window.addEventListener('keydown', onSkip, { once: true })
-      // Mobile: swipe skips
+      window.addEventListener('wheel',     onSkip, { passive: true, once: true })
+      window.addEventListener('keydown',   onSkip, { once: true })
       window.addEventListener('touchmove', onSkip, { passive: true, once: true })
 
       const p = video.play()
       if (p && typeof p.catch === 'function') {
-        p.catch(() => { gsap.delayedCall(0.8, finish) })
+        p.catch((err: unknown) => {
+          console.error('[IntroLoader] video.play() rejected:', err)
+          gsap.delayedCall(0.8, finish)
+        })
       }
     }, containerRef)
 
     return () => {
+      console.log('[IntroLoader] cleanup running')
       finished = true
       clearTimeout(fallback)
       window.removeEventListener('wheel',     onSkip)
@@ -104,7 +126,7 @@ export default function PageLoaderVideo() {
       ctx.revert()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])   // run once on mount — gone is stable at mount time
+  }, [])   // run once on mount
 
   if (gone) return null
 
