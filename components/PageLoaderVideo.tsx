@@ -218,8 +218,8 @@ export default function PageLoaderVideo() {
           aria-hidden="true"
           style={{
             position: 'absolute',
-            width: 'min(84vw, 480px)',
-            height: 'min(48vw, 260px)',
+            width: 'min(95vw, 691px)',
+            height: 'min(70vw, 374px)',
             background:
               'radial-gradient(ellipse at center, rgba(246,241,232,0.55) 0%, rgba(246,241,232,0.28) 42%, transparent 72%)',
             filter: 'blur(6px)',
@@ -228,12 +228,12 @@ export default function PageLoaderVideo() {
         <Image
           src="/credence_asia_logo_hd_transparent.png"
           alt="Credence Asia Group"
-          width={240}
-          height={80}
+          width={346}
+          height={115}
           priority
           style={{
             position: 'relative',
-            width: 'min(52vw, 240px)',
+            width: 'min(74vw, 346px)',
             height: 'auto',
             objectFit: 'contain',
             filter:
